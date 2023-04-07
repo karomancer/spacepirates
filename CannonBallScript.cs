@@ -5,8 +5,12 @@ using UnityEngine;
 public class CannonBallScript : MonoBehaviour
 {
     private GameObject cannon;
+    private EnemyScript EnemyScript;
+
+
     public float speed = 0.001f;
     public float cannonRotation;
+    public int damage = 50;
 
     // Start is called before the first frame update
     void Start()
@@ -36,15 +40,22 @@ public class CannonBallScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        // destroy enemy upon collision.  destroy itself with enemy or obstacle collision
+        // damage enemy upon collision.  destroy itself with any collision
         print("in collider");
         if (collider.gameObject.tag == "Enemy")
         {
-            Destroy(collider.gameObject);
+            // damage enemy
+            collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
+            //Destroy(collider.gameObject);
             Destroy(gameObject);
         }
 
         else if (collider.gameObject.tag == "Obstacle")
+        {
+            Destroy(gameObject);
+        }
+
+        else if (collider.gameObject.tag == "Island")
         {
             Destroy(gameObject);
         }

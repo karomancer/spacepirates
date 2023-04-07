@@ -39,8 +39,10 @@ public class CannonController : MonoBehaviour
     void Fire()
     {
         // here we just instantiate cannonBall, CannonBallScript has other behaviors
+        // mess with transform.position, see if can move origin point on x some fixed amt
+        //transform.position.x - 5 etc.
+
         Instantiate(cannonBall, transform.position, Quaternion.identity);
-        //Instantiate(cannonBall, transform.position, transform.rotation);
         
     }
 }

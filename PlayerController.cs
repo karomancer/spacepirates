@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public float playerRotationSpeed = 0.5f;
     public float playerAngle;
     public bool reachedIsland = false;
+    public int playerHealth = 100;
+    public int playerMaxHealth = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void TakeDamage(int damageAmount)
+    // take damage
+    {
+        playerHealth -= damageAmount;
+        if (playerHealth < 0)
+        {
+            playerHealth = 0;
+        }
+        print(playerHealth);
+    }
+
+    void Heal(int healAmount)
+    // heal health, make sure to not go above max
+    {
+        playerHealth += healAmount;
+        if (playerHealth > playerMaxHealth)
+        {
+            playerHealth = playerMaxHealth;
+        }
+        print(playerHealth);
+    }
 
 
 
@@ -61,17 +84,24 @@ public class PlayerController : MonoBehaviour
 
         else if (collision.gameObject.tag == "Enemy")
         {
-            print("enemy");
+            TakeDamage(50);
         }
 
-        // to implement - how to ignore collision with myself?
-        // this is needed to 1. avoid recoil, 2. avoid collision physics if i am hit with my own cannon
+        else if(collision.gameObject.tag == "Healer")
+        {
+            Heal(10);
+            Destroy(collision.gameObject);
+        }
+
+        // TO IMPLEMENT - how to ignore collision with myself?
+        // this is needed to 1. avoid recoil, 2. avoid collision physics if i am hit with my own cannonball
 
         //else if (collision.gameObject.tag == "CannonBall")
        // {
             //Physics.IgnoreCollision(collision.gameObject.collider, gameObject.Collider2D);
        // }
     }
+
 
 
 
