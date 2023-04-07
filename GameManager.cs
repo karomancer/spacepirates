@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerScriptHolder;
     public GameObject player;
     public GameObject island;
+    public GameObject support;
     public GameObject enemy;
     public GameObject obstacle;
     public GameObject[] cannonBalls;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
         playerController = playerScriptHolder.GetComponent<PlayerController>();
         player = GameObject.FindGameObjectWithTag("Player");
         island = GameObject.FindGameObjectWithTag("Island");
+        support = GameObject.FindGameObjectWithTag("SupportBoat");
     }
 
     // Update is called once per frame
@@ -58,6 +60,7 @@ public class GameManager : MonoBehaviour
         // randomly spawn an enemy and obstacle
         player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
         island.transform.position = new Vector3(Random.Range(11,20), Random.Range(11,20), 0);
+        support.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 2, 0);
         Instantiate(enemy, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
         Instantiate(obstacle, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
 

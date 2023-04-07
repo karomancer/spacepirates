@@ -16,6 +16,8 @@ public class CannonBallScript : MonoBehaviour
     void Start()
     {
         cannon = GameObject.FindGameObjectWithTag("Cannon");
+        //GameObject player = GameObject.FindGameObjectWithTag("Player");
+        //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());     
 
         // on instantiation, get current rotation of cannon (z axis)
         cannonRotation = cannon.transform.eulerAngles.z;
@@ -58,6 +60,12 @@ public class CannonBallScript : MonoBehaviour
         else if (collider.gameObject.tag == "Island")
         {
             Destroy(gameObject);
+        }
+
+        else if (collider.gameObject.tag == "Player")
+        {
+            print("hitting player");
+            //Physics2D.IgnoreCollision(collider.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
     }
 }

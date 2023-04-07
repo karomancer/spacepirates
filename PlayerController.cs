@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
         print(playerHealth);
     }
 
-    void Heal(int healAmount)
+    public void Heal(int healAmount)
     // heal health, make sure to not go above max
     {
         playerHealth += healAmount;
@@ -87,19 +87,21 @@ public class PlayerController : MonoBehaviour
             TakeDamage(50);
         }
 
-        else if(collision.gameObject.tag == "Healer")
-        {
-            Heal(10);
-            Destroy(collision.gameObject);
-        }
+        // else if(collision.gameObject.tag == "Healer")
+        // {
+        //     Heal(10);
+        //     Destroy(collision.gameObject);
+        // }
 
         // TO IMPLEMENT - how to ignore collision with myself?
         // this is needed to 1. avoid recoil, 2. avoid collision physics if i am hit with my own cannonball
+        // below is NOT WORKING 4/7 1:56pm
 
-        //else if (collision.gameObject.tag == "CannonBall")
-       // {
-            //Physics.IgnoreCollision(collision.gameObject.collider, gameObject.Collider2D);
-       // }
+        // else if (collision.gameObject.tag == "CannonBall")
+        // {
+        //     print("hittin cball");
+        //     Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        // }
     }
 
 
