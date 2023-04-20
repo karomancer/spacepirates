@@ -17,5 +17,8 @@ public class CameraController : MonoBehaviour
         // match x,y of camera to x,y of player so player is always in the center of the frame
         // -10 z value is the default
         transform.position = new Vector3(player.gameObject.transform.position.x, player.gameObject.transform.position.y, -10);
+        // match player rotation
+        transform.rotation = player.transform.rotation;
+
     }
 }

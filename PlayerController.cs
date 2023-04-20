@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public bool reachedIsland = false;
     public int playerHealth = 100;
     public int playerMaxHealth = 100;
+    public int healAmount = 20;
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +51,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void TakeDamage(int damageAmount)
+    public void TakeDamage(int damageAmount)
     // take damage
     {
         playerHealth -= damageAmount;
@@ -85,6 +86,12 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Enemy")
         {
             TakeDamage(50);
+        }
+
+        else if (collision.gameObject.tag == "Healer")
+        {
+            Heal(healAmount);
+            Destroy(collision.gameObject);
         }
 
         // else if(collision.gameObject.tag == "Healer")

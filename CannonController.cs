@@ -5,6 +5,8 @@ using UnityEngine;
 public class CannonController : MonoBehaviour
 {
     public GameObject cannonBall;
+    public GameObject cannon;
+    private CannonBallScript CannonBallScript;
 
     public float rotationSpeed = 0.05f;
     // Start is called before the first frame update
@@ -43,6 +45,20 @@ public class CannonController : MonoBehaviour
         //transform.position.x - 5 etc.
 
         Instantiate(cannonBall, transform.position, Quaternion.identity);
-        
+        // if (gameObject.tag == "LeftCannon") {
+        //     cannon.GetComponent<CannonBallScript>().setCannon(GameObject.FindGameObjectWithTag("LeftCannon"));
+        // }
+
+        // if (gameObject.tag == "RightCannon") {
+        //     cannon.GetComponent<CannonBallScript>().setCannon(GameObject.FindGameObjectWithTag("RightCannon"));
+        // }
+        //cannon.GetComponent<CannonBallScript>().cannon = this.gameObject;
+    }
+
+    // ignore this, trying to use this to solve cannonball spawn problem
+    
+    public GameObject returnCannon()
+    {   print(gameObject);
+        return gameObject;
     }
 }

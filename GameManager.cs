@@ -1,3 +1,5 @@
+// need to update destroy/generate functionality for all objects
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
         // randomly spawn an enemy and obstacle
         player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
         island.transform.position = new Vector3(Random.Range(11,20), Random.Range(11,20), 0);
-        support.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 2, 0);
+        //support.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 2, 0);
         Instantiate(enemy, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
         Instantiate(obstacle, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
 
