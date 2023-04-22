@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
             reachedIsland = true;
         }
 
-        else if (collision.gameObject.tag == "Enemy")
+        else if (collision.gameObject.tag == "Enemy"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover")
         {
             TakeDamage(50);
         }

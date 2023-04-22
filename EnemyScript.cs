@@ -9,41 +9,51 @@ public class EnemyScript : MonoBehaviour
     public int enemyHealth = 100;
     public int enemyMaxHealth = 100;
     public float fireCooldown = 1f;
+    public float directionChangeInterval = 4f;
     public float speed = 1f;
-    private float timeStamp;
-    private float rand_x;
-    private float rand_y;
+    private float timeStampFire;
+    private float timeStampChangeDirection;
+    private float randX;
+    private float randY;
+    private float moverType;
 
     public GameObject enemyProjectile;
+    public GameObject player;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // timer for shooter enemies
-        timeStamp = Time.time + fireCooldown;
+        player = GameObject.FindGameObjectWithTag("Player");
+        // randomly rotate enemies on instantiation
+        //transform.Rotate(0,0,Random.Range(0,360));
+        // set timers for firing / changing movement direction
+        timeStampFire = Time.time + fireCooldown;
+        timeStampChangeDirection = Time.time + directionChangeInterval;
+        // set initial x,y movement direction
+        randX = Random.Range(-100f,100f)/75;
+        randY = Random.Range(-100f,100f)/75;
+
+        if (gameObject.tag == "EnemyFollower")
+        {
+            moverType = Random.Range(0f,50f)/10f;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         //timeStamp = Time.time + fireCooldown;
-        if (gameObject.tag == "Enemy_Shooter" && timeStamp <= Time.time)
+        if (gameObject.tag == "Enemy_Shooter" && timeStampFire <= Time.time)
         {
             Fire();
-            timeStamp = Time.time + fireCooldown;
+            timeStampFire = Time.time + fireCooldown;
         }
 
-        // NOT WORKING AS INTENDED - will change so that movement is constant but random direction is picked
-        // on some interval
-        if (gameObject.tag == "EnemyMover" && timeStamp <= Time.time) {
-            rand_x = Random.Range(-100f,100f)/75;
-            rand_y = Random.Range(-100f,100f)/75;
-            print(rand_x);
-            print(rand_y);
-            //transform.Translate(new Vector3(Random.Range(-1,1), Random.Range(-1,1), 0) * speed * Time.deltaTime);
-            transform.Translate(new Vector3(rand_x, rand_y, 0) * speed * Time.deltaTime);
+        if (gameObject.tag == "EnemyFollower") {
+            Follow();
         }
+
     }
 
     public void TakeDamage(int damageAmount)
@@ -60,6 +70,59 @@ public class EnemyScript : MonoBehaviour
     void Fire()
     // fire weapon
     {
-        Instantiate(enemyProjectile, transform.position, Quaternion.identity);
+        // the below 5 lines make the enemy rotate towards the player so it fires directly at the player
+        // we can make this a separate class if we want?
+
+        Vector2 directionToTarget = player.transform.position - transform.position;
+        //float angle = Vector3.Angle(Vector3.right, directionToTarget);
+        float angle = Vector3.Angle(Vector3.up, directionToTarget);
+        //if(player.transform.position.y < transform.position.y) angle *= -1;
+        if(player.transform.position.x > transform.position.x) angle *= -1;
+        Quaternion bulletRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        Quaternion bulletRotation2 = Quaternion.AngleAxis(angle + 10, Vector3.forward);
+        Quaternion bulletRotation3 = Quaternion.AngleAxis(angle - 10, Vector3.forward);
+
+        Instantiate(enemyProjectile, transform.position, bulletRotation);
+        Instantiate(enemyProjectile, transform.position, bulletRotation2);
+        Instantiate(enemyProjectile, transform.position, bulletRotation3);
+
+        //Instantiate(enemyProjectile, transform.position, Quaternion.identity);
+    }
+
+    void Follow()
+    {
+        Vector3 position = this.transform.position;
+
+            if (moverType < 1)
+            {
+                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x, speed * Time.deltaTime);
+                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);
+            }
+
+            else if (moverType < 2)
+            {
+                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x + 5, speed * Time.deltaTime);
+                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);
+            }
+
+            else if (moverType < 3)
+            {
+                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x - 5, speed * Time.deltaTime);
+                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);
+            }
+
+            else if (moverType < 4)
+            {
+                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x, speed * Time.deltaTime);
+                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y + 5, speed * Time.deltaTime);
+            }
+
+            else
+            {
+                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x, speed * Time.deltaTime);
+                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y + 5, speed * Time.deltaTime);
+            }
+  
+            this.transform.position = position;
     }
 }

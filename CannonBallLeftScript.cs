@@ -1,3 +1,5 @@
+// spawn as child, inherit oreintation
+
 // READ ME FIRST
 // trying to have this script handle cannonballs both L and R cannons
 // having trouble getting which cannon spawned a given cannonball
@@ -8,13 +10,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CannonBallScript : MonoBehaviour
+public class CannonBallLeftScript : MonoBehaviour
 {
     //private GameObject cannon;
     //public GameObject foo;
     public GameObject cannon;
     private EnemyScript EnemyScript;
-    private CannonController CannonController;
+    private CannonLeft CannonLeft;
 
 
     public float speed = 0.001f;
@@ -24,9 +26,10 @@ public class CannonBallScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //print(transform.parent);
         //cannon = foo.GetComponent<CannonController>().returnCannon();
         //setCannon();
-        cannon = GameObject.FindGameObjectWithTag("Cannon");
+        cannon = GameObject.FindGameObjectWithTag("LeftCannon");
         //public cannon = GameObject;
         //GameObject player = GameObject.FindGameObjectWithTag("Player");
         //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());     
@@ -55,8 +58,8 @@ public class CannonBallScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         // damage enemy upon collision.  destroy itself with any collision
-        print("in collider");
-        if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter")
+        //print("in collider");
+        if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter" || collider.gameObject.tag == "EnemyMover" || collider.gameObject.tag == "EnemyFollower")
         {
             // damage enemy
             collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
@@ -81,9 +84,5 @@ public class CannonBallScript : MonoBehaviour
         }
     }
 
-    public void setCannon(GameObject cannonObject)
-    {
-        print("assigning");
-        cannon = cannonObject;
-    }
+
 }

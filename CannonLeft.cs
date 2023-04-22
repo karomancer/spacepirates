@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CannonController : MonoBehaviour
+public class CannonLeft : MonoBehaviour
 {
     public GameObject cannonBall;
     public GameObject cannon;
-    private CannonBallScript CannonBallScript;
+    private CannonBallLeftScript CannonBallLeftScript;
 
     public float rotationSpeed = 0.05f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        transform.Rotate(new Vector3(0,0,90));
     }
 
     // Update is called once per frame
@@ -28,12 +28,12 @@ public class CannonController : MonoBehaviour
     void Rotate() 
     {
         // Q = counterclockwise, E = clockwise
-
-        if (Input.GetKey(KeyCode.Q)) {
+        print(transform.eulerAngles.z);
+        if (Input.GetKey(KeyCode.Q) && (transform.eulerAngles.z < 180 || transform.eulerAngles.z > 355)) {
             transform.Rotate(new Vector3(0,0,rotationSpeed));
         }
 
-        if (Input.GetKey(KeyCode.E)) {
+        if (Input.GetKey(KeyCode.E) && transform.rotation.z > 0) {
             transform.Rotate(new Vector3(0,0,-rotationSpeed));
         }
     }
@@ -45,6 +45,7 @@ public class CannonController : MonoBehaviour
         //transform.position.x - 5 etc.
 
         Instantiate(cannonBall, transform.position, Quaternion.identity);
+        //cannonBall.transform.SetParent(gameObject.transform);
         // if (gameObject.tag == "LeftCannon") {
         //     cannon.GetComponent<CannonBallScript>().setCannon(GameObject.FindGameObjectWithTag("LeftCannon"));
         // }
