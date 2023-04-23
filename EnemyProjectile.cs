@@ -38,7 +38,7 @@ public class EnemyProjectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         // damage player upon collision.  destroy itself with any collision
-        print("in collider");
+        //print("in collider");
         if (collider.gameObject.tag == "Player")
         {
             // damage player

@@ -1,17 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class CannonLeft : MonoBehaviour
 {
+    Playercontrols controls;
     public GameObject cannonBall;
     public GameObject cannon;
+    public GameObject player;
     private CannonBallLeftScript CannonBallLeftScript;
 
     public float rotationSpeed = 0.05f;
+
+    float rotateLeft;
+    float rotateRight;
+    float cannonRotation;
+
+    void Awake()
+    {
+        // controls = new Playercontrols();
+
+        // controls.LeftCannon.Steer.performed += ctx => rotateLeft = ctx.ReadValue<float>();
+        // controls.LeftCannon.Steer.canceled += ctx => rotateLeft = 0f;
+        // controls.LeftCannon.Shoot.performed += ctx => Fire();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         transform.Rotate(new Vector3(0,0,90));
     }
 
@@ -27,8 +46,16 @@ public class CannonLeft : MonoBehaviour
 
     void Rotate() 
     {
+        //cannonRotation = map(rotateLeft,-1,1,0,180);
+        //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90); 
+
+
+
+
+
         // Q = counterclockwise, E = clockwise
-        print(transform.eulerAngles.z);
+        // print(transform.eulerAngles.z);
+        
         if (Input.GetKey(KeyCode.Q) && (transform.eulerAngles.z < 180 || transform.eulerAngles.z > 355)) {
             transform.Rotate(new Vector3(0,0,rotationSpeed));
         }
@@ -59,7 +86,25 @@ public class CannonLeft : MonoBehaviour
     // ignore this, trying to use this to solve cannonball spawn problem
     
     public GameObject returnCannon()
-    {   print(gameObject);
+    {   //print(gameObject);
         return gameObject;
     }
+
+
+    void OnEnable()
+    {
+        controls.LeftCannon.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.LeftCannon.Disable();
+    }
+
+    float map(float s, float a1, float a2, float b1, float b2)
+    {
+        return b1 + (s-a1)*(b2-b1)/(a2-a1);
+    }
+
+
 }

@@ -15,13 +15,16 @@ public class CannonBallLeftScript : MonoBehaviour
     //private GameObject cannon;
     //public GameObject foo;
     public GameObject cannon;
+    public GameObject player;
     private EnemyScript EnemyScript;
     private CannonLeft CannonLeft;
 
 
     public float speed = 0.001f;
     public float cannonRotation;
+    public float speedScalar = 5f;
     public int damage = 50;
+    public float playerSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +32,10 @@ public class CannonBallLeftScript : MonoBehaviour
         //print(transform.parent);
         //cannon = foo.GetComponent<CannonController>().returnCannon();
         //setCannon();
+        player = GameObject.FindGameObjectWithTag("Player");
         cannon = GameObject.FindGameObjectWithTag("LeftCannon");
+
+        playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
         //public cannon = GameObject;
         //GameObject player = GameObject.FindGameObjectWithTag("Player");
         //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());     
@@ -50,7 +56,16 @@ public class CannonBallLeftScript : MonoBehaviour
         // not entirely sure why this works but it gives wanted behavior
         // there has to be an easier way to do this?
 
-        transform.Translate(new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime);
+        if (playerSpeed < 1.1f)
+        {
+            transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
+        }
+        
+        else
+        {
+             transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
+        }
+       
 
 
     }
@@ -79,7 +94,7 @@ public class CannonBallLeftScript : MonoBehaviour
 
         else if (collider.gameObject.tag == "Player")
         {
-            print("hitting player");
+            //print("hitting player");
             //Physics2D.IgnoreCollision(collider.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
     }

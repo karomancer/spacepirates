@@ -3,88 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerController2 : MonoBehaviour
 {
    
     
     public GameObject cannonBall;
-    public Rigidbody2D playerRB;
 
-    public float playerSpeed = 1f;
+    public float playerSpeed = 10f;
     public float playerRotationSpeed = 0.5f;
-    public float playerAngle;
+    public float playerAngle = 0;
+    public float angleIncrement = 0.1f;
     public bool reachedIsland = false;
     public int playerHealth = 100;
     public int playerMaxHealth = 100;
     public int healAmount = 20;
 
-    public Vector3 directionVector;
 
 
-
-    void Awake()
-    {
-        //playerRB = gameObject.AddComponent<Rigidbody2D>();
-    }
-    
     
     // Start is called before the first frame update
     void Start()
     {
-    
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerSpeed = 1f;
         Move();
-        //MoveRB();
-        //print(rotateLeft);
+        print(playerAngle);
     }
 
     void Move()
     {
-
+        //transform.Rotate(new Vector3(0,0,playerAngle));
         // can/should i make more boat-like?
         if (Input.GetAxisRaw("Horizontal") < 0) 
         {
-         transform.Rotate(new Vector3(0,0,playerRotationSpeed));
+         playerAngle += angleIncrement;
         }
 
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
-         transform.Rotate(new Vector3(0,0,-playerRotationSpeed));
+         playerAngle -= angleIncrement;
         }
         
         if (Input.GetAxisRaw("Vertical") < 0) 
         {
          transform.Translate(Vector3.down * playerSpeed * Time.deltaTime);
+         transform.Rotate(new Vector3(0,0,playerAngle));
         }
 
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-         playerSpeed = 10f;
-         directionVector = Vector3.up * playerSpeed * Time.deltaTime;
          transform.Translate(Vector3.up * playerSpeed * Time.deltaTime);
-        }
-    }
-
-    void MoveRB() 
-    {
-        if (Input.GetAxisRaw("Vertical") > 0)
-        {
-            playerRB.AddForce(transform.up * playerSpeed);
-        }
-
-        if (Input.GetAxisRaw("Horizontal") < 0) 
-        {
-         transform.Rotate(new Vector3(0,0,playerRotationSpeed));
-        }
-
-        if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-         transform.Rotate(new Vector3(0,0,-playerRotationSpeed));
+         transform.Rotate(new Vector3(0,0,playerAngle));
         }
     }
 

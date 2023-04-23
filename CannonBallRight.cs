@@ -81,7 +81,7 @@ public class CannonBallRight : MonoBehaviour
 
         else if (collider.gameObject.tag == "Player")
         {
-            print("hitting player");
+            //print("hitting player");
             //Physics2D.IgnoreCollision(collider.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
     }

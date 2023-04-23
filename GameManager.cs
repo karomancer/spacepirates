@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numEnemiesF; i++)
         {
             Instantiate(enemyFollower, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
-        }
+        }   
 
         for (int i = 0; i < numHealers; i++)
         {

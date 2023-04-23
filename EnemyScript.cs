@@ -12,6 +12,7 @@ public class EnemyScript : MonoBehaviour
     public float directionChangeInterval = 4f;
     public float speed = 1f;
     private float timeStampFire;
+    private float timeStampFireSpread;
     private float timeStampChangeDirection;
     private float randX;
     private float randY;
@@ -28,7 +29,8 @@ public class EnemyScript : MonoBehaviour
         // randomly rotate enemies on instantiation
         //transform.Rotate(0,0,Random.Range(0,360));
         // set timers for firing / changing movement direction
-        timeStampFire = Time.time + fireCooldown;
+        //timeStampFire = Time.time + fireCooldown;
+        timeStampFireSpread = Time.time + fireCooldown;
         timeStampChangeDirection = Time.time + directionChangeInterval;
         // set initial x,y movement direction
         randX = Random.Range(-100f,100f)/75;
@@ -44,15 +46,21 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         //timeStamp = Time.time + fireCooldown;
-        if (gameObject.tag == "Enemy_Shooter" && timeStampFire <= Time.time)
+        if (gameObject.tag == "Enemy_Shooter" && timeStampFireSpread <= Time.time)
         {
-            Fire();
-            timeStampFire = Time.time + fireCooldown;
+            print("timestampfire: ");
+            print(timeStampFireSpread);
+            print("time");
+            print(Time.time);
+            FireSpread();
+            timeStampFireSpread = Time.time + fireCooldown;
         }
 
-        if (gameObject.tag == "EnemyFollower") {
-            Follow();
-        }
+        // if (gameObject.tag == "EnemyFollower") {
+        //     Follow();
+        //     Fire();
+        //     timeStampFire = Time.time + fireCooldown;
+        // }
 
     }
 
@@ -68,6 +76,15 @@ public class EnemyScript : MonoBehaviour
     }
 
     void Fire()
+    {
+        Vector2 directionToTarget = player.transform.position - transform.position;
+        float angle = Vector3.Angle(Vector3.up, directionToTarget);
+        if(player.transform.position.x > transform.position.x) angle *= -1;
+        Quaternion bulletRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        Instantiate(enemyProjectile, transform.position, bulletRotation);
+    }
+    
+    void FireSpread()
     // fire weapon
     {
         // the below 5 lines make the enemy rotate towards the player so it fires directly at the player

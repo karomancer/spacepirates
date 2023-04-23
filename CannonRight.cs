@@ -1,18 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class CannonRight: MonoBehaviour
 {
+    Playercontrols controls;
     public GameObject cannonBall;
     public GameObject cannon;
+    public GameObject player;
+
+
+
     private CannonBallRight CannonBallRight;
 
     public float rotationSpeed = 0.05f;
+    float rotation;
+    float cannonRotation;
     // Start is called before the first frame update
+
+    void Awake()
+    {
+        controls = new Playercontrols();
+
+        controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
+        controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
+        controls.RightCannon.Shoot.performed += ctx => Fire();
+    }
+
+
     void Start()
     {
         transform.Rotate(new Vector3(0,0,-90));
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -27,6 +48,9 @@ public class CannonRight: MonoBehaviour
 
     void Rotate() 
     {
+        cannonRotation = map(rotation,-1,1,0,180);
+        //print(cannonRotation);
+        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
         // I = counterclockwise, P = clockwise
         //print(transform.eulerAngles.z);
 
@@ -60,7 +84,22 @@ public class CannonRight: MonoBehaviour
     // ignore this, trying to use this to solve cannonball spawn problem
     
     public GameObject returnCannon()
-    {   print(gameObject);
+    {   //print(gameObject);
         return gameObject;
+    }
+
+    void OnEnable()
+    {
+        controls.RightCannon.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.RightCannon.Disable();
+    }
+
+    float map(float s, float a1, float a2, float b1, float b2)
+    {
+        return b1 + (s-a1)*(b2-b1)/(a2-a1);
     }
 }
