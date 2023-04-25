@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameObject enemyFollower;
     public GameObject healer;
     public GameObject obstacle;
+    public GameObject this_obstacle;
     public GameObject[] cannonBalls;
     public GameObject[] enemies;
     public GameObject[] obstacles;
@@ -33,10 +34,10 @@ public class GameManager : MonoBehaviour
 
     public int numEnemies = 3;
     public int numEnemiesS = 3;
-    public int numEnemiesM = 3;
+    public int numEnemiesM = 5;
     public int numEnemiesF = 3;
     public int numHealers = 2;
-    public int numObstacles = 5;
+    public int numObstacles = 20;
 
 
 
@@ -117,29 +118,24 @@ public class GameManager : MonoBehaviour
 
         // randomly place player and island
         // randomly spawn an enemy and obstacle
+        
         player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
-        island.transform.position = new Vector3(Random.Range(11,20), Random.Range(11,20), 0);
-        //support.transform.position = new Vector3(player.transform.position.x, player.transform.position.y - 2, 0);
-        // Instantiate(enemy, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
-        // Instantiate(obstacle, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
-        // Instantiate(enemyShooter, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
-        // Instantiate(enemyMover, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
-        // Instantiate(healer, new Vector3(Random.Range(0,10), Random.Range(0,10), 0), Quaternion.identity);
-
-        for (int i = 0; i < numEnemies; i++)
-        {
-            Instantiate(enemy, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
-        }
+        island.transform.position = new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0);
+        
+        // for (int i = 0; i < numEnemies; i++)
+        // {
+        //     Instantiate(enemy, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
+        // }
 
         for (int i = 0; i < numObstacles; i++)
         {
-            Instantiate(obstacle, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
+            this_obstacle = Instantiate(obstacle, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
+            this_obstacle.transform.Rotate(0,0,Random.Range(0,360));
         }
 
         for (int i = 0; i < numEnemiesS; i++)
         {
             Instantiate(enemyShooter, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
-            //Instantiate(enemyShooter, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.Euler(0,0,Random.Range(0,360)));
             
         }
 

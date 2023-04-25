@@ -20,6 +20,7 @@ public class CannonLeft : MonoBehaviour
 
     void Awake()
     {
+        // UNCOMMENT FOR PHYS CONTROLS
         // controls = new Playercontrols();
 
         // controls.LeftCannon.Steer.performed += ctx => rotateLeft = ctx.ReadValue<float>();
@@ -46,6 +47,7 @@ public class CannonLeft : MonoBehaviour
 
     void Rotate() 
     {
+        // UNCOMMENT FOR PHYS CONTROLS
         //cannonRotation = map(rotateLeft,-1,1,0,180);
         //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90); 
 
@@ -55,7 +57,7 @@ public class CannonLeft : MonoBehaviour
 
         // Q = counterclockwise, E = clockwise
         // print(transform.eulerAngles.z);
-        
+
         if (Input.GetKey(KeyCode.Q) && (transform.eulerAngles.z < 180 || transform.eulerAngles.z > 355)) {
             transform.Rotate(new Vector3(0,0,rotationSpeed));
         }
@@ -72,34 +74,19 @@ public class CannonLeft : MonoBehaviour
         //transform.position.x - 5 etc.
 
         Instantiate(cannonBall, transform.position, Quaternion.identity);
-        //cannonBall.transform.SetParent(gameObject.transform);
-        // if (gameObject.tag == "LeftCannon") {
-        //     cannon.GetComponent<CannonBallScript>().setCannon(GameObject.FindGameObjectWithTag("LeftCannon"));
-        // }
 
-        // if (gameObject.tag == "RightCannon") {
-        //     cannon.GetComponent<CannonBallScript>().setCannon(GameObject.FindGameObjectWithTag("RightCannon"));
-        // }
-        //cannon.GetComponent<CannonBallScript>().cannon = this.gameObject;
     }
-
-    // ignore this, trying to use this to solve cannonball spawn problem
     
-    public GameObject returnCannon()
-    {   //print(gameObject);
-        return gameObject;
-    }
 
+    // void OnEnable()
+    // {
+    //     controls.LeftCannon.Enable();
+    // }
 
-    void OnEnable()
-    {
-        controls.LeftCannon.Enable();
-    }
-
-    void OnDisable()
-    {
-        controls.LeftCannon.Disable();
-    }
+    // void OnDisable()
+    // {
+    //     controls.LeftCannon.Disable();
+    // }
 
     float map(float s, float a1, float a2, float b1, float b2)
     {

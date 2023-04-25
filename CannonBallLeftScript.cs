@@ -29,16 +29,11 @@ public class CannonBallLeftScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //print(transform.parent);
-        //cannon = foo.GetComponent<CannonController>().returnCannon();
-        //setCannon();
+        // get player and cannon so we can fire in the correct direction
         player = GameObject.FindGameObjectWithTag("Player");
         cannon = GameObject.FindGameObjectWithTag("LeftCannon");
 
         playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
-        //public cannon = GameObject;
-        //GameObject player = GameObject.FindGameObjectWithTag("Player");
-        //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());     
 
         // on instantiation, get current rotation of cannon (z axis)
         cannonRotation = cannon.transform.eulerAngles.z;
@@ -55,6 +50,11 @@ public class CannonBallLeftScript : MonoBehaviour
         // bc of how unity deals with angles a "true" 90 degrees is really 0 degrees
         // not entirely sure why this works but it gives wanted behavior
         // there has to be an easier way to do this?
+
+        // fire in the direction of the cannon, but scale it by the speed of player (maybe this should be velocity)?
+        // this is janky and kinda works, but TBD if there is a better solution
+
+        // if else is just to handle the case of bullet firing slow when not moving
 
         if (playerSpeed < 1.1f)
         {
@@ -73,12 +73,16 @@ public class CannonBallLeftScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         // damage enemy upon collision.  destroy itself with any collision
-        //print("in collider");
         if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter" || collider.gameObject.tag == "EnemyMover" || collider.gameObject.tag == "EnemyFollower")
         {
             // damage enemy
             collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
-            //Destroy(collider.gameObject);
+            Destroy(gameObject);
+        }
+
+        else if (collider.gameObject.tag == "EnemyProjectile")
+        {
+            Destroy(collider.gameObject);
             Destroy(gameObject);
         }
 

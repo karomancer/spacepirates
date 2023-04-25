@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
    
     
     public GameObject cannonBall;
+    public GameObject delivery;
     public Rigidbody2D playerRB;
 
     public float playerSpeed = 1f;
@@ -15,8 +16,10 @@ public class PlayerController : MonoBehaviour
     public float playerAngle;
     public bool reachedIsland = false;
     public int playerHealth = 100;
+    public int playerNewHealth;
     public int playerMaxHealth = 100;
     public int healAmount = 20;
+    public int numDeliveries = 3;
 
     public Vector3 directionVector;
 
@@ -59,6 +62,8 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetAxisRaw("Vertical") < 0) 
         {
+         playerSpeed = 10f;
+         directionVector = Vector3.down * playerSpeed * Time.deltaTime;
          transform.Translate(Vector3.down * playerSpeed * Time.deltaTime);
         }
 
@@ -91,12 +96,35 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damageAmount)
     // take damage
     {
-        playerHealth -= damageAmount;
+        playerNewHealth = playerHealth - damageAmount;
+
+        if (numDeliveries == 3 && playerHealth > 75 && playerNewHealth <= 75)
+        {
+            Instantiate(delivery, transform.position, Quaternion.identity);
+            numDeliveries--;
+        }
+
+        if (numDeliveries == 2 && playerHealth > 50 && playerNewHealth <= 50)
+        {
+            Instantiate(delivery, transform.position, Quaternion.identity);
+            numDeliveries--;
+        }
+
+        if (numDeliveries == 1 && playerHealth > 25 && playerNewHealth <= 25)
+        {
+            Instantiate(delivery, transform.position, Quaternion.identity);
+            numDeliveries--;
+        }
+
+
         if (playerHealth < 0)
         {
             playerHealth = 0;
+            Destroy(gameObject);
         }
-        //print(playerHealth);
+
+        playerHealth = playerNewHealth;
+        print(playerHealth);
     }
 
     public void Heal(int healAmount)
@@ -122,7 +150,7 @@ public class PlayerController : MonoBehaviour
 
         else if (collision.gameObject.tag == "Enemy"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover")
         {
-            TakeDamage(50);
+            TakeDamage(1);
         }
 
         else if (collision.gameObject.tag == "Healer")

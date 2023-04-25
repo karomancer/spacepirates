@@ -12,8 +12,7 @@ using UnityEngine;
 
 public class CannonBallRight : MonoBehaviour
 {
-    //private GameObject cannon;
-    //public GameObject foo;
+    public GameObject player;
     public GameObject cannon;
     private EnemyScript EnemyScript;
     private CannonLeft CannonLeft;
@@ -22,17 +21,16 @@ public class CannonBallRight : MonoBehaviour
     public float speed = 100.001f;
     public float cannonRotation;
     public int damage = 50;
+    private float playerSpeed;
+    private float speedScalar = 5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        //print(transform.parent);
-        //cannon = foo.GetComponent<CannonController>().returnCannon();
-        //setCannon();
+
+        player = GameObject.FindGameObjectWithTag("Player");
         cannon = GameObject.FindGameObjectWithTag("RightCannon");
-        //public cannon = GameObject;
-        //GameObject player = GameObject.FindGameObjectWithTag("Player");
-        //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());     
+        playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
 
         // on instantiation, get current rotation of cannon (z axis)
         cannonRotation = cannon.transform.eulerAngles.z;
@@ -50,9 +48,15 @@ public class CannonBallRight : MonoBehaviour
         // not entirely sure why this works but it gives wanted behavior
         // there has to be an easier way to do this?
 
-        transform.Translate(new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime);
-        print(-Mathf.Sin(cannonRotation));
-        print(Mathf.Cos(cannonRotation));
+        if (playerSpeed < 1.1f)
+        {
+            transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
+        }
+        
+        else
+        {
+             transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
+        }
 
 
     }
@@ -60,12 +64,16 @@ public class CannonBallRight : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         // damage enemy upon collision.  destroy itself with any collision
-        //print("in collider");
         if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter" || collider.gameObject.tag == "EnemyMover" || collider.gameObject.tag == "EnemyFollower")
         {
             // damage enemy
             collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
-            //Destroy(collider.gameObject);
+            Destroy(gameObject);
+        }
+
+        else if (collider.gameObject.tag == "EnemyProjectile")
+        {
+            Destroy(collider.gameObject);
             Destroy(gameObject);
         }
 
