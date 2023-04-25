@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -62,6 +63,11 @@ public class GameManager : MonoBehaviour
             // if boat hits island, generate new level
             GenerateNewLevel();
             playerController.reachedIsland = false;
+        }
+
+        if (player == null)
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 

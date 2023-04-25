@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 directionVector;
 
+    public HealthBarScript healthBar;
+
 
 
     void Awake()
@@ -34,7 +36,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
+        healthBar.SetMaxHealth(playerMaxHealth);
     }
 
     // Update is called once per frame
@@ -124,6 +126,7 @@ public class PlayerController : MonoBehaviour
         }
 
         playerHealth = playerNewHealth;
+        healthBar.SetHealth(playerHealth);
         print(playerHealth);
     }
 
@@ -159,21 +162,12 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
         }
 
-        // else if(collision.gameObject.tag == "Healer")
-        // {
-        //     Heal(10);
-        //     Destroy(collision.gameObject);
-        // }
+        else if (collision.gameObject.tag == "Delivery")
+        {
+            numDeliveries++;
+            Destroy(collision.gameObject);
+        }
 
-        // TO IMPLEMENT - how to ignore collision with myself?
-        // this is needed to 1. avoid recoil, 2. avoid collision physics if i am hit with my own cannonball
-        // below is NOT WORKING 4/7 1:56pm
-
-        // else if (collision.gameObject.tag == "CannonBall")
-        // {
-        //     print("hittin cball");
-        //     Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        // }
     }
 
 

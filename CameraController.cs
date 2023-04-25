@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
         // -10 z value is the default
         transform.position = new Vector3(player.gameObject.transform.position.x, player.gameObject.transform.position.y, -10);
         // match player rotation
-        //transform.rotation = player.transform.rotation;
+        transform.rotation = player.transform.rotation;
 
     }
 }
