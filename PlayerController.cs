@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-   
+    public GameObject delivery1;
+    public GameObject delivery2;
+    public GameObject delivery3;
     
     public GameObject cannonBall;
     public GameObject delivery;
@@ -104,18 +106,21 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
+            delivery3.SetActive(false);
         }
 
-        if (numDeliveries == 2 && playerHealth > 50 && playerNewHealth <= 50)
+        if (numDeliveries >= 2 && playerHealth > 50 && playerNewHealth <= 50)
         {
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
+            delivery2.SetActive(false);
         }
 
-        if (numDeliveries == 1 && playerHealth > 25 && playerNewHealth <= 25)
+        if (numDeliveries >= 1 && playerHealth > 25 && playerNewHealth <= 25)
         {
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
+            delivery1.SetActive(false);
         }
 
 
@@ -130,15 +135,17 @@ public class PlayerController : MonoBehaviour
         print(playerHealth);
     }
 
+
     public void Heal(int healAmount)
-    // heal health, make sure to not go above max
     {
-        playerHealth += healAmount;
+        playerHealth = playerHealth + healAmount;
+
         if (playerHealth > playerMaxHealth)
         {
             playerHealth = playerMaxHealth;
         }
-        //print(playerHealth);
+
+        healthBar.SetHealth(playerHealth);
     }
 
 
@@ -165,6 +172,23 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Delivery")
         {
             numDeliveries++;
+            if (numDeliveries == 3)
+            {
+                delivery3.SetActive(true);
+            }
+
+            else if (numDeliveries == 2)
+            {
+                delivery2.SetActive(true);
+            }
+
+            else if (numDeliveries == 1)
+            {
+                delivery1.SetActive(true);
+            }
+
+
+
             Destroy(collision.gameObject);
         }
 

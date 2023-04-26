@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     public GameObject[] followingEnemies;
     public GameObject[] enemyProjectiles;
     public GameObject[] healers;
+    public GameObject[] deliveries;
+
+    public HealthBarScript healthBar;
+    public GameObject delivery1;
+    public GameObject delivery2;
+    public GameObject delivery3;
 
 
     public int xMin = -20;
@@ -67,11 +73,22 @@ public class GameManager : MonoBehaviour
 
         if (player == null)
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("GameOver");
         }
     }
 
     void GenerateNewLevel() {
+        player.GetComponent<PlayerController>().Heal(100);
+        healthBar.SetHealth(player.GetComponent<PlayerController>().playerHealth);
+        delivery3.SetActive(true);
+        delivery2.SetActive(true);
+        delivery1.SetActive(true);
+        player.GetComponent<PlayerController>().numDeliveries = 3;
+
+
+
+
+
         // find all level-specific items and delete them
         cannonBalls = GameObject.FindGameObjectsWithTag("CannonBall");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -122,17 +139,17 @@ public class GameManager : MonoBehaviour
             Destroy(_healer);
         }
 
+        foreach (GameObject _delivery in deliveries)
+        {
+            Destroy(_delivery);
+        }
+
         // randomly place player and island
         // randomly spawn an enemy and obstacle
         
         player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
         island.transform.position = new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0);
         
-        // for (int i = 0; i < numEnemies; i++)
-        // {
-        //     Instantiate(enemy, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
-        // }
-
         for (int i = 0; i < numObstacles; i++)
         {
             this_obstacle = Instantiate(obstacle, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
@@ -142,7 +159,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numEnemiesS; i++)
         {
             Instantiate(enemyShooter, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
-            
         }
 
         for (int i = 0; i < numEnemiesM; i++)

@@ -15,7 +15,7 @@ public class DeliveryScript : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         player = GameObject.FindGameObjectWithTag("Player");
         playerPosition = player.transform.position;
-        newPosition = player.transform.position + new Vector3(Random.Range(-10,10),Random.Range(-10,10),0);
+        newPosition = player.transform.position + new Vector3(Random.Range(5,10),Random.Range(5,10),0);
     }
 
     // Update is called once per frame
@@ -25,7 +25,7 @@ public class DeliveryScript : MonoBehaviour
          {
             GetComponent<BoxCollider2D>().enabled = true;
          }
-         
+
          Vector3 position = this.transform.position;
          position.x = Mathf.Lerp(this.transform.position.x, newPosition.x, speed * Time.deltaTime);
          position.y = Mathf.Lerp(this.transform.position.y, newPosition.y, speed * Time.deltaTime);
