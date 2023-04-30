@@ -40,11 +40,18 @@ public class GameManager : MonoBehaviour
     public int yMax = 20;
 
     public int numEnemies = 3;
-    public int numEnemiesS = 3;
-    public int numEnemiesM = 5;
-    public int numEnemiesF = 3;
+    public int numEnemiesS = 2;
+    public int numEnemiesM = 2;
+    public int numEnemiesF = 2;
     public int numHealers = 2;
-    public int numObstacles = 20;
+    public int numObstacles = 5;
+
+    public float difficultyLevel= 1f;
+    public float difficultyInc = .3f;
+
+    private Vector3 differenceVector;
+    private float differenceFloat;
+    private bool levelChangeSceneShowed = false;
 
 
 
@@ -66,9 +73,21 @@ public class GameManager : MonoBehaviour
     {
         if (playerController.reachedIsland == true)
         {
+            // if (levelChangeSceneShowed)
+            // {
+                print("generating new level");
+                GenerateNewLevel();
+                // levelChangeSceneShowed = false;
+                playerController.reachedIsland = false;
+            //}
             // if boat hits island, generate new level
-            GenerateNewLevel();
-            playerController.reachedIsland = false;
+            // else
+            // {
+            //     print("changing scene");
+            //     levelChangeSceneShowed = true;
+            //     SceneManager.LoadScene("LevelChange");
+            // }
+            
         }
 
         if (player == null)
@@ -85,6 +104,8 @@ public class GameManager : MonoBehaviour
         delivery1.SetActive(true);
         player.GetComponent<PlayerController>().numDeliveries = 3;
 
+        difficultyLevel += difficultyInc;
+
 
 
 
@@ -98,6 +119,7 @@ public class GameManager : MonoBehaviour
         enemyProjectiles = GameObject.FindGameObjectsWithTag("EnemyProjectile");
         obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
         healers = GameObject.FindGameObjectsWithTag("Healer");
+        deliveries = GameObject.FindGameObjectsWithTag("Delivery");
         
         foreach (GameObject _cannonBall in cannonBalls)
         {
@@ -147,31 +169,47 @@ public class GameManager : MonoBehaviour
         // randomly place player and island
         // randomly spawn an enemy and obstacle
         
-        player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
-        island.transform.position = new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0);
+        // player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
+        // island.transform.position = new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0);
+
+        // differenceVector = player.transform.position - island.transform.position;
+        // print("distance between");
+        // differenceFloat = differenceVector.x + differenceVector.y + differenceVector.z;
+
+        for (int i = 0; i <= 20; i++)
+        {
+            player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
+            island.transform.position = new Vector3(Random.Range(xMin-2,xMax+2), Random.Range(yMin-2,yMax+2), 0);
+            differenceVector = player.transform.position - island.transform.position;
+            differenceFloat = differenceVector.x + differenceVector.y + differenceVector.z;
+            if (Mathf.Abs(differenceFloat) > 15)
+            {
+                break;
+            }
+        }
         
-        for (int i = 0; i < numObstacles; i++)
+        for (int i = 0; i < (int) numObstacles * difficultyLevel; i++)
         {
             this_obstacle = Instantiate(obstacle, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
             this_obstacle.transform.Rotate(0,0,Random.Range(0,360));
         }
 
-        for (int i = 0; i < numEnemiesS; i++)
+        for (int i = 0; i < (int) numEnemiesS * difficultyLevel; i++)
         {
             Instantiate(enemyShooter, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
         }
 
-        for (int i = 0; i < numEnemiesM; i++)
+        for (int i = 0; i < (int) numEnemiesM * difficultyLevel; i++)
         {
             Instantiate(enemyMover, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
         }
 
-        for (int i = 0; i < numEnemiesF; i++)
+        for (int i = 0; i < Mathf.Min(3,(int) numEnemiesF * difficultyLevel); i++)
         {
             Instantiate(enemyFollower, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
         }   
 
-        for (int i = 0; i < numHealers; i++)
+        for (int i = 0; i < (int) numHealers * difficultyLevel; i++)
         {
             Instantiate(healer, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
         }

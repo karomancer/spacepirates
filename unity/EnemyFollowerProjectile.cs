@@ -50,7 +50,7 @@ public class EnemyFollowerProjectile : MonoBehaviour
         if (collider.gameObject.tag == "Player")
         {
             // damage player
-            print("damaging");
+            //print("damaging");
             collider.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
             //Destroy(collider.gameObject);
             Destroy(gameObject);

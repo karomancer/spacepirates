@@ -9,10 +9,10 @@ public class EnemyScript : MonoBehaviour
     public int enemyHealth = 100;
     public int enemyMaxHealth = 100;
     public int moveState = 1;
-    public float fireCooldown = 1f;
+    public float fireCooldown = 2f;
     public float directionChangeInterval = 4f;
     public float speed = 1f;
-    public float moverError = .1f;
+    public float moverError = .3f;
     private float timeStampFire;
     private float timeStampFireSpread;
     private float timeStampChangeDirection;
@@ -43,7 +43,7 @@ public class EnemyScript : MonoBehaviour
 
         if (gameObject.tag == "EnemyFollower")
         {
-            moverType = Random.Range(0f,50f)/10f;
+            moverType = Random.Range(10f,50f)/10f;
         }
 
         if (gameObject.tag == "EnemyMover")
@@ -141,13 +141,13 @@ public class EnemyScript : MonoBehaviour
     {
         Vector3 position = this.transform.position;
 
-            if (moverType < 1)
-            {
-                position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x, speed * Time.deltaTime);
-                position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);
-            }
+            // if (moverType < 1)
+            // {
+            //     position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x, speed * Time.deltaTime);
+            //     position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);
+            // }
 
-            else if (moverType < 2)
+            if (moverType < 2)
             {
                 position.x = Mathf.Lerp(this.transform.position.x, player.transform.position.x + 5, speed * Time.deltaTime);
                 position.y = Mathf.Lerp(this.transform.position.y, player.transform.position.y, speed * Time.deltaTime);

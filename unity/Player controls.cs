@@ -61,7 +61,7 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""89e8ffb6-5f99-4276-b43a-30bfd769776f"",
-                    ""path"": """",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -120,11 +120,90 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3b619233-917d-406f-8a5b-1660af49c3f6"",
-                    ""path"": """",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button5"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Ship"",
+            ""id"": ""d9944cfb-2406-4ef0-a9ce-a9b46de72db3"",
+            ""actions"": [
+                {
+                    ""name"": ""SteeringLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""40166801-6028-438c-8b51-fa1534297612"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SteeringRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""abb9e890-fa10-4b73-9017-3b63681781b2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speed"",
+                    ""type"": ""Value"",
+                    ""id"": ""3115036c-fab2-4b0a-b05d-67145af92544"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""0aba260c-d382-4f5e-8ccb-f49ca8c2ba02"",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SteeringLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e060f124-e029-4336-9c3b-2b2b8ed2d939"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SteeringLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e95fbe1-956e-43ca-9d69-5413b6c0ac41"",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SteeringRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3bcb0d7f-cc98-4346-a64f-ee813522eb27"",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/stick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Speed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -141,6 +220,11 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
         m_RightCannon = asset.FindActionMap("RightCannon", throwIfNotFound: true);
         m_RightCannon_Steer = m_RightCannon.FindAction("Steer", throwIfNotFound: true);
         m_RightCannon_Shoot = m_RightCannon.FindAction("Shoot", throwIfNotFound: true);
+        // Ship
+        m_Ship = asset.FindActionMap("Ship", throwIfNotFound: true);
+        m_Ship_SteeringLeft = m_Ship.FindAction("SteeringLeft", throwIfNotFound: true);
+        m_Ship_SteeringRight = m_Ship.FindAction("SteeringRight", throwIfNotFound: true);
+        m_Ship_Speed = m_Ship.FindAction("Speed", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -278,6 +362,55 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
         }
     }
     public RightCannonActions @RightCannon => new RightCannonActions(this);
+
+    // Ship
+    private readonly InputActionMap m_Ship;
+    private IShipActions m_ShipActionsCallbackInterface;
+    private readonly InputAction m_Ship_SteeringLeft;
+    private readonly InputAction m_Ship_SteeringRight;
+    private readonly InputAction m_Ship_Speed;
+    public struct ShipActions
+    {
+        private @Playercontrols m_Wrapper;
+        public ShipActions(@Playercontrols wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SteeringLeft => m_Wrapper.m_Ship_SteeringLeft;
+        public InputAction @SteeringRight => m_Wrapper.m_Ship_SteeringRight;
+        public InputAction @Speed => m_Wrapper.m_Ship_Speed;
+        public InputActionMap Get() { return m_Wrapper.m_Ship; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ShipActions set) { return set.Get(); }
+        public void SetCallbacks(IShipActions instance)
+        {
+            if (m_Wrapper.m_ShipActionsCallbackInterface != null)
+            {
+                @SteeringLeft.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringLeft;
+                @SteeringLeft.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringLeft;
+                @SteeringLeft.canceled -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringLeft;
+                @SteeringRight.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringRight;
+                @SteeringRight.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringRight;
+                @SteeringRight.canceled -= m_Wrapper.m_ShipActionsCallbackInterface.OnSteeringRight;
+                @Speed.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
+                @Speed.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
+                @Speed.canceled -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
+            }
+            m_Wrapper.m_ShipActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @SteeringLeft.started += instance.OnSteeringLeft;
+                @SteeringLeft.performed += instance.OnSteeringLeft;
+                @SteeringLeft.canceled += instance.OnSteeringLeft;
+                @SteeringRight.started += instance.OnSteeringRight;
+                @SteeringRight.performed += instance.OnSteeringRight;
+                @SteeringRight.canceled += instance.OnSteeringRight;
+                @Speed.started += instance.OnSpeed;
+                @Speed.performed += instance.OnSpeed;
+                @Speed.canceled += instance.OnSpeed;
+            }
+        }
+    }
+    public ShipActions @Ship => new ShipActions(this);
     public interface ILeftCannonActions
     {
         void OnSteer(InputAction.CallbackContext context);
@@ -287,5 +420,11 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
     {
         void OnSteer(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+    }
+    public interface IShipActions
+    {
+        void OnSteeringLeft(InputAction.CallbackContext context);
+        void OnSteeringRight(InputAction.CallbackContext context);
+        void OnSpeed(InputAction.CallbackContext context);
     }
 }

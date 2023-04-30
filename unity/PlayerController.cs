@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public GameObject delivery1;
     public GameObject delivery2;
     public GameObject delivery3;
+    public GameObject compass;
     
     public GameObject cannonBall;
     public GameObject delivery;
@@ -22,8 +23,12 @@ public class PlayerController : MonoBehaviour
     public int playerMaxHealth = 100;
     public int healAmount = 20;
     public int numDeliveries = 3;
+    public int enemyCollisionDamage = 5;
 
     public Vector3 directionVector;
+    public Vector3 differenceVector;
+    public Vector3 spawn_transform;
+    public float differenceFloat;
 
     public HealthBarScript healthBar;
 
@@ -31,7 +36,12 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        //playerRB = gameObject.AddComponent<Rigidbody2D>();
+        // UNCOMMENT FOR PHYS CONTROLS
+        // controls = new Playercontrols();
+
+        // controls.Steering.SteerLeft.performed += ctx =>  
+        // controls.Steering.SteerLeft.performed;
+        // controls.Steering.Steer.canceled += ctx => rotateLeft = 0f;
     }
     
     
@@ -57,11 +67,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") < 0) 
         {
          transform.Rotate(new Vector3(0,0,playerRotationSpeed));
+         compass.transform.Rotate(new Vector3(0,0,-playerRotationSpeed));
         }
 
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
          transform.Rotate(new Vector3(0,0,-playerRotationSpeed));
+         compass.transform.Rotate(new Vector3(0,0,playerRotationSpeed));
         }
         
         if (Input.GetAxisRaw("Vertical") < 0) 
@@ -104,21 +116,25 @@ public class PlayerController : MonoBehaviour
 
         if (numDeliveries == 3 && playerHealth > 75 && playerNewHealth <= 75)
         {
-            Instantiate(delivery, transform.position, Quaternion.identity);
+            SpawnDelivery();
+            //Instantiate(delivery, transform.position, Quaternion.identity);
+            print("instantiated");
             numDeliveries--;
             delivery3.SetActive(false);
         }
 
         if (numDeliveries >= 2 && playerHealth > 50 && playerNewHealth <= 50)
         {
-            Instantiate(delivery, transform.position, Quaternion.identity);
+            SpawnDelivery();
+            //Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery2.SetActive(false);
         }
 
         if (numDeliveries >= 1 && playerHealth > 25 && playerNewHealth <= 25)
         {
-            Instantiate(delivery, transform.position, Quaternion.identity);
+            SpawnDelivery();
+            //Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery1.SetActive(false);
         }
@@ -148,6 +164,23 @@ public class PlayerController : MonoBehaviour
         healthBar.SetHealth(playerHealth);
     }
 
+    void SpawnDelivery()
+    {
+        for (int i = 0; i <= 20; i++)
+        {
+            //player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
+            spawn_transform = new Vector3(Random.Range(transform.position.x-5,transform.position.x+5), Random.Range(transform.position.y-5,transform.position.y+5), 0);
+            differenceVector = transform.position - spawn_transform;
+            differenceFloat = differenceVector.x + differenceVector.y + differenceVector.z;
+            if (Mathf.Abs(differenceFloat) > 5)
+            {
+                Instantiate(delivery, transform.position, Quaternion.identity);
+                //Instantiate(delivery, spawn_transform, Quaternion.identity);
+                break;
+            }
+        }
+    }
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -158,9 +191,9 @@ public class PlayerController : MonoBehaviour
             reachedIsland = true;
         }
 
-        else if (collision.gameObject.tag == "Enemy"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover")
+        else if (collision.gameObject.tag == "Enemy"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover" || collision.gameObject.tag == "EnemyFollower")
         {
-            TakeDamage(1);
+            TakeDamage(enemyCollisionDamage);
         }
 
         else if (collision.gameObject.tag == "Healer")

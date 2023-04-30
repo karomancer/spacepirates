@@ -39,7 +39,7 @@
                 {
                     "name": "",
                     "id": "89e8ffb6-5f99-4276-b43a-30bfd769776f",
-                    "path": "",
+                    "path": "<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button4",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -98,11 +98,90 @@
                 {
                     "name": "",
                     "id": "3b619233-917d-406f-8a5b-1660af49c3f6",
-                    "path": "",
+                    "path": "<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button5",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Ship",
+            "id": "d9944cfb-2406-4ef0-a9ce-a9b46de72db3",
+            "actions": [
+                {
+                    "name": "SteeringLeft",
+                    "type": "Button",
+                    "id": "40166801-6028-438c-8b51-fa1534297612",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SteeringRight",
+                    "type": "Button",
+                    "id": "abb9e890-fa10-4b73-9017-3b63681781b2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Speed",
+                    "type": "Value",
+                    "id": "3115036c-fab2-4b0a-b05d-67145af92544",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0aba260c-d382-4f5e-8ccb-f49ca8c2ba02",
+                    "path": "<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SteeringLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e060f124-e029-4336-9c3b-2b2b8ed2d939",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SteeringLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e95fbe1-956e-43ca-9d69-5413b6c0ac41",
+                    "path": "<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/button7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SteeringRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3bcb0d7f-cc98-4346-a64f-ee813522eb27",
+                    "path": "<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/stick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Speed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

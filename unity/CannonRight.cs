@@ -23,11 +23,11 @@ public class CannonRight: MonoBehaviour
     void Awake()
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        //controls = new Playercontrols();
+        controls = new Playercontrols();
 
-        //controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
-        //controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
-        //controls.RightCannon.Shoot.performed += ctx => Fire();
+        controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
+        controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
+        controls.RightCannon.Shoot.performed += ctx => Fire();
     }
 
 
@@ -50,19 +50,20 @@ public class CannonRight: MonoBehaviour
     void Rotate() 
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        //cannonRotation = map(rotation,-1,1,0,180);
+        cannonRotation = map(rotation,-1,1,0,-180);
         //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
+        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);
         
         
         // I = counterclockwise, P = clockwise
 
-        if (Input.GetKey(KeyCode.I) && transform.eulerAngles.z > 170) {
-            transform.Rotate(new Vector3(0,0,rotationSpeed));
-        }
+        // if (Input.GetKey(KeyCode.I) && transform.eulerAngles.z > 170) {
+        //     transform.Rotate(new Vector3(0,0,rotationSpeed));
+        // }
 
-        if (Input.GetKey(KeyCode.P) && (transform.eulerAngles.z > 180 || transform.eulerAngles.z < Mathf.Abs(10))) {
-            transform.Rotate(new Vector3(0,0,-rotationSpeed));
-        }
+        // if (Input.GetKey(KeyCode.P) && (transform.eulerAngles.z > 180 || transform.eulerAngles.z < Mathf.Abs(10))) {
+        //     transform.Rotate(new Vector3(0,0,-rotationSpeed));
+        // }
     }
     
     void Fire()
@@ -78,15 +79,15 @@ public class CannonRight: MonoBehaviour
     // ignore this, trying to use this to solve cannonball spawn problem
     
 
-    // void OnEnable()
-    // {
-    //     controls.RightCannon.Enable();
-    // }
+    void OnEnable()
+    {
+        controls.RightCannon.Enable();
+    }
 
-    // void OnDisable()
-    // {
-    //     controls.RightCannon.Disable();
-    // }
+    void OnDisable()
+    {
+        controls.RightCannon.Disable();
+    }
 
     float map(float s, float a1, float a2, float b1, float b2)
     {
