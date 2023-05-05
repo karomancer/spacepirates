@@ -66,10 +66,20 @@ public class CannonBallRight : MonoBehaviour
         // damage enemy upon collision.  destroy itself with any collision
         if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter" || collider.gameObject.tag == "EnemyMover" || collider.gameObject.tag == "EnemyFollower")
         {
+            //print("hitting collider");
             // damage enemy
-            collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
+            print("right cball hitting");
+            collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
             Destroy(gameObject);
         }
+
+        // else if (collider.gameObject.tag == "EnemyFollower")
+        // {
+        //     // damage enemy
+        //     //print("hitting collider");
+        //     collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
+        //     Destroy(gameObject);
+        //}
 
         else if (collider.gameObject.tag == "EnemyProjectile")
         {

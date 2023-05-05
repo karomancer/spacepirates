@@ -17,6 +17,7 @@ public class CannonBallLeftScript : MonoBehaviour
     public GameObject cannon;
     public GameObject player;
     private EnemyScript EnemyScript;
+    private EnemyScriptGH EnemyScriptGH;
     private CannonLeft CannonLeft;
 
 
@@ -75,10 +76,21 @@ public class CannonBallLeftScript : MonoBehaviour
         // damage enemy upon collision.  destroy itself with any collision
         if (collider.gameObject.tag == "Enemy" || collider.gameObject.tag == "Enemy_Shooter" || collider.gameObject.tag == "EnemyMover" || collider.gameObject.tag == "EnemyFollower")
         {
+
             // damage enemy
-            collider.gameObject.GetComponent<EnemyScript>().TakeDamage(damage);
+            //print("hitting collider");
+            print("left cball hitting");
+            collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
             Destroy(gameObject);
         }
+
+        // else if (collider.gameObject.tag == "EnemyFollower")
+        // {
+        //     // damage enemy
+        //     //print("hitting collider");
+        //     collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
+        //     Destroy(gameObject);
+        //}
 
         else if (collider.gameObject.tag == "EnemyProjectile")
         {

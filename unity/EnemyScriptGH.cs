@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyScript : MonoBehaviour
+public class EnemyScriptGH : MonoBehaviour
 {
     public int enemyHealth = 100;
     public int enemyMaxHealth = 100;
@@ -20,8 +20,6 @@ public class EnemyScript : MonoBehaviour
     private float randY;
     private float moverType;
     private float distance;
-    private float angle;
-    private bool hasntFired = true;
 
     private Vector3 targetPosition;
 
@@ -50,6 +48,7 @@ public class EnemyScript : MonoBehaviour
         if (gameObject.tag == "EnemyFollower")
         {
             moverType = Random.Range(10f,50f)/10f;
+            print(moverType);
         }
 
         if (gameObject.tag == "EnemyMover")
@@ -57,6 +56,7 @@ public class EnemyScript : MonoBehaviour
             targetPosition = new Vector3(this.transform.position.x + 5, this.transform.position.y, 0);
         }
 
+        renderer = GetComponent<SpriteRenderer>();
         print(renderer);
         originalColor = renderer.color;
         print(originalColor);
@@ -67,31 +67,31 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         //timeStamp = Time.time + fireCooldown;
-        if (gameObject.tag == "Enemy_Shooter")
+        if (gameObject.tag == "Enemy_Shooter" && timeStampFireSpread <= Time.time)
         {
             Vector2 directionToTarget = player.transform.position - transform.position;
-            angle = Vector3.Angle(Vector3.up, directionToTarget);
+            float angle = Vector3.Angle(Vector3.up, directionToTarget);
             if(player.transform.position.x > transform.position.x) angle *= -1;
             Quaternion followerRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.transform.rotation = followerRotation;
-            // print("timestampfirespread");
-            // print(timeStampFireSpread);
-            // print("time.time");
-            // print(Time.time);
+            FireSpread();
+            timeStampFireSpread = Time.time + fireCooldown;
+        }
 
-            if (timeStampFireSpread <= Time.time && hasntFired) {
-                //print("should be firing");
-                FireSpread();
-                timeStampFireSpread = Time.time + fireCooldown;
-                hasntFired = false;
-            }
+        if (gameObject.tag == "Enemy_Shooter")
+        {
+            Vector2 directionToTarget = player.transform.position - transform.position;
+            float angle = Vector3.Angle(Vector3.up, directionToTarget);
+            if(player.transform.position.x > transform.position.x) angle *= -1;
+            Quaternion followerRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            this.transform.rotation = followerRotation;
         }
 
         if (gameObject.tag == "EnemyFollower") {
             Follow();
             if (timeStampFire <= Time.time)
             {
-                Fire();
+                FireFollower();
                 timeStampFire = Time.time + fireCooldown;
             }
             
@@ -119,6 +119,9 @@ public class EnemyScript : MonoBehaviour
     // subtract damage done from health, and destroy object if it has 0 health
     {
         FlashRed();
+        print(renderer.color);
+        print("damaging");
+        print(damageAmount);
         enemyHealth -= damageAmount;
         if (enemyHealth <= 0)
         {
@@ -133,7 +136,15 @@ public class EnemyScript : MonoBehaviour
         float angle = Vector3.Angle(Vector3.up, directionToTarget);
         if(player.transform.position.x > transform.position.x) angle *= -1;
         Quaternion bulletRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        Instantiate(enemyProjectile, transform.position, bulletRotation, this.transform);
+        Instantiate(enemyProjectile, transform.position, bulletRotation);
+    }
+
+    void FireFollower()
+    {
+        // Vector2 playerDir = player.transform.position - this.transform.position;
+        // float angle = Vector3.Angle(Vector3.up, playerDir);
+        // Quaternion followerRotation = Quaternion.AngleAxis(angle, Vector3.up);
+        Instantiate(enemyProjectile, transform.position, Quaternion.identity, this.transform);
     }
     
     void FireSpread()
@@ -142,27 +153,18 @@ public class EnemyScript : MonoBehaviour
         // the below 5 lines make the enemy rotate towards the player so it fires directly at the player
         // we can make this a separate class if we want?
 
-        // Vector2 directionToTarget = player.transform.position - transform.position;
-        // //float angle = Vector3.Angle(Vector3.right, directionToTarget);
-        // float angle = Vector3.Angle(Vector3.up, directionToTarget);
-        // //if(player.transform.position.y < transform.position.y) angle *= -1;
-        // if(player.transform.position.x > transform.position.x) angle *= -1;
-        // Quaternion followerRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        // this.transform.rotation = followerRotation;
+        Vector2 directionToTarget = player.transform.position - transform.position;
+        //float angle = Vector3.Angle(Vector3.right, directionToTarget);
+        float angle = Vector3.Angle(Vector3.up, directionToTarget);
+        //if(player.transform.position.y < transform.position.y) angle *= -1;
+        if(player.transform.position.x > transform.position.x) angle *= -1;
+        Quaternion bulletRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        Quaternion bulletRotation2 = Quaternion.AngleAxis(angle + 10, Vector3.forward);
+        Quaternion bulletRotation3 = Quaternion.AngleAxis(angle - 10, Vector3.forward);
 
-        //print("in firespread");
-
-        float turretAngle = transform.eulerAngles.z;
-
-
-
-        Quaternion bulletRotation = Quaternion.AngleAxis(turretAngle, Vector3.forward);
-        Quaternion bulletRotation2 = Quaternion.AngleAxis(turretAngle + 10, Vector3.forward);
-        Quaternion bulletRotation3 = Quaternion.AngleAxis(turretAngle - 10, Vector3.forward);
-
-        Instantiate(enemyProjectile, transform.position, bulletRotation, this.transform);
-        Instantiate(enemyProjectile, transform.position, bulletRotation2, this.transform);
-        Instantiate(enemyProjectile, transform.position, bulletRotation3, this.transform);
+        Instantiate(enemyProjectile, transform.position, bulletRotation);
+        Instantiate(enemyProjectile, transform.position, bulletRotation2);
+        Instantiate(enemyProjectile, transform.position, bulletRotation3);
 
         //Instantiate(enemyProjectile, transform.position, Quaternion.identity);
     }
@@ -202,13 +204,10 @@ public class EnemyScript : MonoBehaviour
             }
   
             this.transform.position = position;
-
             Vector2 playerDir = player.transform.position - this.transform.position;
             float angle = (Mathf.Atan2(-playerDir.x, playerDir.y ) * Mathf.Rad2Deg);
             Quaternion followerRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.transform.rotation = followerRotation;
-            //float rotationSpeed = 1f;
-            //this.transform.rotation = Mathf.Lerp(this.transform.eulerAngles.z, angle, rotationSpeed);
     }
 
     void Patrol()
@@ -224,6 +223,8 @@ public class EnemyScript : MonoBehaviour
         {
             moveState = 2;
             targetPosition = new Vector3(this.transform.position.x, this.transform.position.y - 5, 0);
+            //this.transform.Rotate(0,0,-90);
+            this.transform.rotation = new Quaternion(0,0,270,0);
             // print("my position");
             // print(this.transform.position.y);
             // print("target position");
@@ -239,6 +240,7 @@ public class EnemyScript : MonoBehaviour
         {
             moveState = 3;
             targetPosition = new Vector3(this.transform.position.x - 5, this.transform.position.y, 0);
+            this.transform.Rotate(0,0,-90);
         }
 
         else if ((this.transform.position.x - moverError) >= targetPosition.x && moveState == 3)
@@ -250,6 +252,7 @@ public class EnemyScript : MonoBehaviour
         {
             moveState = 4;
             targetPosition = new Vector3(this.transform.position.x, this.transform.position.y + 5, 0);
+            this.transform.Rotate(0,0,-90);
         }
 
         else if ((this.transform.position.y + moverError) <= targetPosition.y && moveState == 4)
@@ -261,12 +264,12 @@ public class EnemyScript : MonoBehaviour
         {
             moveState = 1;
             targetPosition = new Vector3(this.transform.position.x + 5, this.transform.position.y, 0);
+            this.transform.Rotate(0,0,-90);
         }
 
         //print(moveState);
         this.transform.position = moverPosition;
     }
-
 
     void FlashRed()
     {

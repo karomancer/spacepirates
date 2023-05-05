@@ -1,10 +1,8 @@
-// basically a copy of cannonballscript
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFollowerProjectile : MonoBehaviour
+public class FollowerProjectileNew: MonoBehaviour
 {
     private EnemyScript EnemyScript;
     private PlayerController PlayerController;
@@ -32,7 +30,6 @@ public class EnemyFollowerProjectile : MonoBehaviour
 
         // need to convert to radians to get angle in degrees 
         enemyRotation = (enemyRotation * Mathf.PI)/180;
-        //print(enemyRotation);
 
         Destroy(gameObject, 7);
     }
@@ -40,18 +37,9 @@ public class EnemyFollowerProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //print(enemyRotation);
-        if (enemy.gameObject.tag == "EnemyFollower" || enemy.gameObject.tag == "EnemyMover")
-        {
-            transform.Translate((new Vector3(-Mathf.Sin(enemyRotation), Mathf.Cos(enemyRotation), 0) + playerDirection) * speed * Time.deltaTime);
-        }
-
-        else
-        {
-            //print("shooting in else");
-            print(new Vector3(-Mathf.Sin(enemyRotation), Mathf.Cos(enemyRotation), 0) * speed * Time.deltaTime);
-            transform.Translate((new Vector3(-Mathf.Sin(enemyRotation), Mathf.Cos(enemyRotation), 0)) * speed * Time.deltaTime);
-        }
+        //transform.Translate(Vector3.up * speed * Time.deltaTime);
+        
+        transform.Translate((new Vector3(-Mathf.Sin(enemyRotation), Mathf.Cos(enemyRotation), 0) + playerDirection) * speed * Time.deltaTime);
     }
 
 
@@ -68,7 +56,7 @@ public class EnemyFollowerProjectile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        else if (collider.gameObject.tag == "Obstacle")
+        else if (collider.gameObject.tag == "Obstacle" || collider.gameObject.tag == "Border")
         {
             Destroy(gameObject);
         }

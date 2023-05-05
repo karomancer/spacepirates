@@ -53,8 +53,8 @@ public class DeliveryScript : MonoBehaviour
          }
 
          Vector3 position = this.transform.position;
-         print("my position is");
-         print(position);
+         //print("my position is");
+         //print(position);
          position.x = Mathf.Lerp(this.transform.position.x, spawn_transform.x, speed * Time.deltaTime);
          position.y = Mathf.Lerp(this.transform.position.y, spawn_transform.y, speed * Time.deltaTime);
          this.transform.position = position;

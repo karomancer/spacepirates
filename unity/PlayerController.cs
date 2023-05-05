@@ -32,6 +32,13 @@ public class PlayerController : MonoBehaviour
 
     public HealthBarScript healthBar;
 
+    public AudioSource audioSource;
+    public AudioClip healClip;
+    public AudioClip damageClip;
+    public AudioClip lostDelivery;
+    public AudioClip gotDelivery;
+    public float volume = 0.5f;
+
 
 
     void Awake()
@@ -112,11 +119,13 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damageAmount)
     // take damage
     {
+        audioSource.PlayOneShot(damageClip, volume);
         playerNewHealth = playerHealth - damageAmount;
 
         if (numDeliveries == 3 && playerHealth > 75 && playerNewHealth <= 75)
         {
             SpawnDelivery();
+            audioSource.PlayOneShot(lostDelivery, volume);
             //Instantiate(delivery, transform.position, Quaternion.identity);
             print("instantiated");
             numDeliveries--;
@@ -126,6 +135,7 @@ public class PlayerController : MonoBehaviour
         if (numDeliveries >= 2 && playerHealth > 50 && playerNewHealth <= 50)
         {
             SpawnDelivery();
+            audioSource.PlayOneShot(lostDelivery, volume);
             //Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery2.SetActive(false);
@@ -134,6 +144,7 @@ public class PlayerController : MonoBehaviour
         if (numDeliveries >= 1 && playerHealth > 25 && playerNewHealth <= 25)
         {
             SpawnDelivery();
+            audioSource.PlayOneShot(lostDelivery, volume);
             //Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery1.SetActive(false);
@@ -198,12 +209,14 @@ public class PlayerController : MonoBehaviour
 
         else if (collision.gameObject.tag == "Healer")
         {
+            audioSource.PlayOneShot(healClip, volume);
             Heal(healAmount);
             Destroy(collision.gameObject);
         }
 
         else if (collision.gameObject.tag == "Delivery")
         {
+            audioSource.PlayOneShot(gotDelivery, volume);
             numDeliveries++;
             if (numDeliveries == 3)
             {

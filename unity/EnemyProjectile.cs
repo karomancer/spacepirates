@@ -32,7 +32,9 @@ public class EnemyProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //transform.Translate(Vector3.up * speed * Time.deltaTime);
         transform.Translate(new Vector3(-Mathf.Sin(enemyRotation), Mathf.Cos(enemyRotation), 0) * speed * Time.deltaTime);
+        print(transform.position);
     }
 
 

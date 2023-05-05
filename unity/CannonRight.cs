@@ -18,16 +18,20 @@ public class CannonRight: MonoBehaviour
     public float rotationSpeed = 0.05f;
     float rotation;
     float cannonRotation;
+
+    public AudioSource audioSource;
+    public AudioClip fireClip;
+    public float volume = 0.5f;
     // Start is called before the first frame update
 
     void Awake()
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        controls = new Playercontrols();
+        // controls = new Playercontrols();
 
-        controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
-        controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
-        controls.RightCannon.Shoot.performed += ctx => Fire();
+        // controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
+        // controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
+        // controls.RightCannon.Shoot.performed += ctx => Fire();
     }
 
 
@@ -50,20 +54,20 @@ public class CannonRight: MonoBehaviour
     void Rotate() 
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        cannonRotation = map(rotation,-1,1,0,-180);
-        //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
-        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);
+        // cannonRotation = map(rotation,-1,1,0,-180);
+        // //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
+        // transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);
         
         
         // I = counterclockwise, P = clockwise
 
-        // if (Input.GetKey(KeyCode.I) && transform.eulerAngles.z > 170) {
-        //     transform.Rotate(new Vector3(0,0,rotationSpeed));
-        // }
+        if (Input.GetKey(KeyCode.I) && transform.eulerAngles.z > 170) {
+            transform.Rotate(new Vector3(0,0,rotationSpeed));
+        }
 
-        // if (Input.GetKey(KeyCode.P) && (transform.eulerAngles.z > 180 || transform.eulerAngles.z < Mathf.Abs(10))) {
-        //     transform.Rotate(new Vector3(0,0,-rotationSpeed));
-        // }
+        if (Input.GetKey(KeyCode.P) && (transform.eulerAngles.z > 180 || transform.eulerAngles.z < Mathf.Abs(10))) {
+            transform.Rotate(new Vector3(0,0,-rotationSpeed));
+        }
     }
     
     void Fire()
@@ -71,6 +75,7 @@ public class CannonRight: MonoBehaviour
         // here we just instantiate cannonBall, CannonBallScript has other behaviors
         // mess with transform.position, see if can move origin point on x some fixed amt
         //transform.position.x - 5 etc.
+        audioSource.PlayOneShot(fireClip, volume);
 
         Instantiate(cannonBall, transform.position, Quaternion.identity);
 

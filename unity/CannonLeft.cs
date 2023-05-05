@@ -18,6 +18,10 @@ public class CannonLeft : MonoBehaviour
     float rotateRight;
     float cannonRotation;
 
+    public AudioSource audioSource;
+    public AudioClip fireClip;
+    public float volume = 0.5f;
+
     void Awake()
     {
         // UNCOMMENT FOR PHYS CONTROLS
@@ -49,9 +53,9 @@ public class CannonLeft : MonoBehaviour
     void Rotate() 
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        cannonRotation = map(rotateLeft,-1,1,0,180);
-        //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90);
-        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);  
+        // cannonRotation = map(rotateLeft,-1,1,0,180);
+        // //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90);
+        // transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);  
 
 
 
@@ -68,13 +72,13 @@ public class CannonLeft : MonoBehaviour
         //     transform.Rotate(new Vector3(0,0,-rotationSpeed));
         // }
 
-        // if (Input.GetKey(KeyCode.Q) && (player.transform.eulerAngles.z - transform.eulerAngles.z) < 180) {
-        //     transform.Rotate(new Vector3(0,0,rotationSpeed));
-        // }
+        if (Input.GetKey(KeyCode.Q) && (player.transform.eulerAngles.z - transform.eulerAngles.z) < 180) {
+            transform.Rotate(new Vector3(0,0,rotationSpeed));
+        }
 
-        // if (Input.GetKey(KeyCode.E) && (player.transform.eulerAngles.z - transform.rotation.z > 0)) {
-        //     transform.Rotate(new Vector3(0,0,-rotationSpeed));
-        // }
+        if (Input.GetKey(KeyCode.E) && (player.transform.eulerAngles.z - transform.rotation.z > 0)) {
+            transform.Rotate(new Vector3(0,0,-rotationSpeed));
+        }
     }
     
     void Fire()
@@ -82,21 +86,22 @@ public class CannonLeft : MonoBehaviour
         // here we just instantiate cannonBall, CannonBallScript has other behaviors
         // mess with transform.position, see if can move origin point on x some fixed amt
         //transform.position.x - 5 etc.
-
+        audioSource.PlayOneShot(fireClip, volume);
+        
         Instantiate(cannonBall, transform.position, Quaternion.identity);
 
     }
     
 
-    void OnEnable()
-    {
-        controls.LeftCannon.Enable();
-    }
+    // void OnEnable()
+    // {
+    //     controls.LeftCannon.Enable();
+    // }
 
-    void OnDisable()
-    {
-        controls.LeftCannon.Disable();
-    }
+    // void OnDisable()
+    // {
+    //     controls.LeftCannon.Disable();
+    // }
 
     float map(float s, float a1, float a2, float b1, float b2)
     {
