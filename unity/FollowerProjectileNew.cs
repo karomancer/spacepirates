@@ -12,7 +12,7 @@ public class FollowerProjectileNew: MonoBehaviour
     
     public float speed = 0.001f;
     public float enemyRotation;
-    public int damage = 1;
+    private int damage = 1;
     //public transform enemy;
     
     private Vector3 playerDirection;
@@ -26,7 +26,8 @@ public class FollowerProjectileNew: MonoBehaviour
         //print(enemy);
 
         enemyRotation = enemy.transform.eulerAngles.z;
-        playerDirection = player.GetComponent<PlayerController>().directionVector;
+        //playerDirection = player.GetComponent<PlayerController>().directionVector;
+        playerDirection = player.GetComponent<PlayerController2>().directionVector;
 
         // need to convert to radians to get angle in degrees 
         enemyRotation = (enemyRotation * Mathf.PI)/180;
@@ -51,12 +52,13 @@ public class FollowerProjectileNew: MonoBehaviour
         {
             // damage player
             //print("damaging");
-            collider.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            //collider.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            collider.gameObject.GetComponent<PlayerController2>().TakeDamage(damage);
             //Destroy(collider.gameObject);
             Destroy(gameObject);
         }
 
-        else if (collider.gameObject.tag == "Obstacle" || collider.gameObject.tag == "Border")
+        else if (collider.gameObject.tag == "Obstacle" || collider.gameObject.tag == "Border" || collider.gameObject.tag == "EnemyShooterParent")
         {
             Destroy(gameObject);
         }

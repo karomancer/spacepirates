@@ -5,22 +5,19 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class GameManagerGameOver : MonoBehaviour
+public class GameManagerInstructions : MonoBehaviour
 {
-    public AudioSource mainAudio;
-
     Playercontrols controls;
     // Start is called before the first frame update
     void Awake()
     {
         controls = new Playercontrols();
-        controls.Ship.Start.performed += ctx =>  LoadMainMenu();
+        controls.Ship.Start.performed += ctx =>  LoadGame();
     }
     // Start is called before the first frame update
     void Start()
     {
-        mainAudio.loop = true;
-        mainAudio.Play();
+        
     }
 
     // Update is called once per frame
@@ -28,13 +25,13 @@ public class GameManagerGameOver : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("Game");
         }
     }
 
-    void LoadMainMenu()
+    void LoadGame()
     {
-       SceneManager.LoadScene("MainMenu"); 
+       SceneManager.LoadScene("Game"); 
     }
 
     void OnEnable()

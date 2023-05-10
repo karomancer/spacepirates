@@ -34,7 +34,8 @@ public class CannonBallLeftScript : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         cannon = GameObject.FindGameObjectWithTag("LeftCannon");
 
-        playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
+        //playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
+        playerSpeed = player.GetComponent<PlayerController2>().playerSpeed;
 
         // on instantiation, get current rotation of cannon (z axis)
         cannonRotation = cannon.transform.eulerAngles.z;
@@ -57,15 +58,17 @@ public class CannonBallLeftScript : MonoBehaviour
 
         // if else is just to handle the case of bullet firing slow when not moving
 
-        if (playerSpeed < 1.1f)
-        {
-            transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
-        }
+        // if (playerSpeed < 1.1f)
+        // {
+        //     transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
+        // }
         
-        else
-        {
-             transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
-        }
+        // else
+        // {
+        //      transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
+        // }
+
+        transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * 4);
        
 
 
@@ -79,7 +82,7 @@ public class CannonBallLeftScript : MonoBehaviour
 
             // damage enemy
             //print("hitting collider");
-            print("left cball hitting");
+            //print("left cball hitting");
             collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
             Destroy(gameObject);
         }

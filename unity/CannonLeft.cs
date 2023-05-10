@@ -53,9 +53,10 @@ public class CannonLeft : MonoBehaviour
     void Rotate() 
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        // cannonRotation = map(rotateLeft,-1,1,0,180);
-        // //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90);
-        // transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);  
+        //cannonRotation = map(rotateLeft,-1,1,0,180);
+        cannonRotation = map(rotateLeft,1,-1,0,180);
+        //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z + 90);
+        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);  
 
 
 
@@ -93,15 +94,15 @@ public class CannonLeft : MonoBehaviour
     }
     
 
-    // void OnEnable()
-    // {
-    //     controls.LeftCannon.Enable();
-    // }
+    void OnEnable()
+    {
+        controls.LeftCannon.Enable();
+    }
 
-    // void OnDisable()
-    // {
-    //     controls.LeftCannon.Disable();
-    // }
+    void OnDisable()
+    {
+        controls.LeftCannon.Disable();
+    }
 
     float map(float s, float a1, float a2, float b1, float b2)
     {

@@ -17,6 +17,8 @@ public class PlayerController2 : MonoBehaviour
     public GameObject delivery;
     public Rigidbody2D playerRB;
 
+    public GameObject compass;
+
     public float playerSpeed = 0f;
     private float speed = 0f;
     public float speedLimit = 10f;
@@ -37,6 +39,17 @@ public class PlayerController2 : MonoBehaviour
 
     public HealthBarScript healthBar;
 
+    public float flashTime;
+    Color originalColor;
+    public SpriteRenderer renderer;
+
+    public AudioSource audioSource;
+    public AudioClip healClip;
+    public AudioClip damageClip;
+    public AudioClip lostDelivery;
+    public AudioClip gotDelivery;
+    public float volume = 0.5f;
+
 
 
     void Awake()
@@ -56,26 +69,21 @@ public class PlayerController2 : MonoBehaviour
     void Start()
     {
         healthBar.SetMaxHealth(playerMaxHealth);
+        renderer = GetComponent<SpriteRenderer>();
+        //print(renderer);
+        originalColor = renderer.color;
+        //print(originalColor);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //playerSpeed = 1f;
-        speed = map(playerSpeed, -1,1,0,8);
+        speed = Mathf.Lerp(10,0,playerSpeed);
+        print("player speed");
+        print(playerSpeed);
         Move();
-        //transform.Rotate(new Vector3(0,0,rotation));
         Vector3 r = new Vector3(0, 0, rotation) * Time.deltaTime;
         transform.Rotate(r);
-        //print(rotation);
-        print(playerSpeed);
-        // Vector3 m = Vector3.up * (playerSpeed/2) * Time.deltaTime;
-        // transform.Translate(m);
-        
-        // MoveLeft();
-        // MoveRight();
-        //MoveRB();
-        //print(rotateLeft);
     }
 
     void MoveLeft()
@@ -83,16 +91,18 @@ public class PlayerController2 : MonoBehaviour
         if (rotation < rotationLimit)
         
         {
-            print("left");
+            //print("left");
             rotation += rotationInc;
+            compass.transform.Rotate(new Vector3(0,0,-rotationInc));
         }
     }
     void MoveRight()
     {
         if (rotation > -1*rotationLimit)
         {
-        print("right");
+        //print("right");
         rotation -= rotationInc;
+        compass.transform.Rotate(new Vector3(0,0,rotationInc));
         }
     }
 
@@ -147,10 +157,13 @@ public class PlayerController2 : MonoBehaviour
     public void TakeDamage(int damageAmount)
     // take damage
     {
+        audioSource.PlayOneShot(damageClip, volume);
+        FlashRed();
         playerNewHealth = playerHealth - damageAmount;
 
         if (numDeliveries == 3 && playerHealth > 75 && playerNewHealth <= 75)
         {
+            audioSource.PlayOneShot(lostDelivery, volume);
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery3.SetActive(false);
@@ -158,6 +171,7 @@ public class PlayerController2 : MonoBehaviour
 
         if (numDeliveries >= 2 && playerHealth > 50 && playerNewHealth <= 50)
         {
+            audioSource.PlayOneShot(lostDelivery, volume);
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery2.SetActive(false);
@@ -165,6 +179,7 @@ public class PlayerController2 : MonoBehaviour
 
         if (numDeliveries >= 1 && playerHealth > 25 && playerNewHealth <= 25)
         {
+            audioSource.PlayOneShot(lostDelivery, volume);
             Instantiate(delivery, transform.position, Quaternion.identity);
             numDeliveries--;
             delivery1.SetActive(false);
@@ -179,7 +194,7 @@ public class PlayerController2 : MonoBehaviour
 
         playerHealth = playerNewHealth;
         healthBar.SetHealth(playerHealth);
-        print(playerHealth);
+        //print(playerHealth);
     }
 
 
@@ -205,19 +220,21 @@ public class PlayerController2 : MonoBehaviour
             reachedIsland = true;
         }
 
-        else if (collision.gameObject.tag == "Enemy"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover")
+        else if (collision.gameObject.tag == "EnemyFollower"|| collision.gameObject.tag == "Enemy_Shooter" || collision.gameObject.tag == "EnemyMover")
         {
             TakeDamage(1);
         }
 
         else if (collision.gameObject.tag == "Healer")
         {
+            audioSource.PlayOneShot(healClip, volume);
             Heal(healAmount);
             Destroy(collision.gameObject);
         }
 
         else if (collision.gameObject.tag == "Delivery")
         {
+            audioSource.PlayOneShot(gotDelivery, volume);
             numDeliveries++;
             if (numDeliveries == 3)
             {
@@ -252,6 +269,17 @@ public class PlayerController2 : MonoBehaviour
     float map(float s, float a1, float a2, float b1, float b2)
     {
         return b1 + (s-a1)*(b2-b1)/(a2-a1);
+    }
+
+    void FlashRed()
+    {
+        renderer.color = Color.red;
+        Invoke("ResetColor", flashTime);
+    }
+
+    void ResetColor()
+    {
+        renderer.color = originalColor;
     }
 
 

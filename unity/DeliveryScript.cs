@@ -35,7 +35,7 @@ public class DeliveryScript : MonoBehaviour
             if (Mathf.Abs(differenceFloat) > 3)
             {
                 newPosition = spawn_transform;
-                print(newPosition);
+                //print(newPosition);
                 break;
             }
         }

@@ -29,6 +29,20 @@ public class EnemyScriptGH : MonoBehaviour
     public float flashTime;
     Color originalColor;
     public SpriteRenderer renderer;
+    Color childColor;
+    public SpriteRenderer childRenderer;
+
+    public float distanceSensitivity = 10;
+    private bool needToRespawn = false;
+    
+    // private float respawnTimer;
+    // private float respawnDelay = 5;
+
+    public GameObject enemyFollower;
+    // private GameManger GameManager;
+
+    public ParticleSystem explosion;
+
 
 
     // Start is called before the first frame update
@@ -47,8 +61,10 @@ public class EnemyScriptGH : MonoBehaviour
 
         if (gameObject.tag == "EnemyFollower")
         {
+            enemyHealth = 300;
             moverType = Random.Range(10f,50f)/10f;
-            print(moverType);
+            renderer.color = Color.white;
+            //print(moverType);
         }
 
         if (gameObject.tag == "EnemyMover")
@@ -57,9 +73,17 @@ public class EnemyScriptGH : MonoBehaviour
         }
 
         renderer = GetComponent<SpriteRenderer>();
-        print(renderer);
+        if (gameObject.tag == "Enemy_Shooter")
+        {
+            //childRenderer = GetComponentInChildren<SpriteRenderer>();
+            //print("got cr");
+            //print(childRenderer);
+            childColor = childRenderer.color;
+            //childRenderer.color = Color.red;
+        }
+        //print(renderer);
         originalColor = renderer.color;
-        print(originalColor);
+        //print(originalColor);
 
     }
 
@@ -100,18 +124,24 @@ public class EnemyScriptGH : MonoBehaviour
         if (gameObject.tag == "EnemyMover")
         {
             distance = Vector3.Distance(player.transform.position, this.transform.position);
-            if (distance < 5 && timeStampFire <= Time.time)
+            if (distance < distanceSensitivity && timeStampFire <= Time.time)
             {
                 Fire();
                 timeStampFire = Time.time + fireCooldown;
             }
 
-            else if (distance > 5)
+            else if (distance >= distanceSensitivity)
             {
                 Patrol();
             }
             
         }
+
+        // if (needToRespawn)
+        // {
+        //     print("calling respawn");
+        //     Respawn();
+        // }
 
     }
 
@@ -119,16 +149,41 @@ public class EnemyScriptGH : MonoBehaviour
     // subtract damage done from health, and destroy object if it has 0 health
     {
         FlashRed();
-        print(renderer.color);
-        print("damaging");
-        print(damageAmount);
+        // print(renderer.color);
+        // print("damaging");
+        // print(damageAmount);
         enemyHealth -= damageAmount;
         if (enemyHealth <= 0)
         {
+            if (gameObject.tag == "EnemyFollower")
+            {
+                print("follower dead");
+                // needToRespawn = true;
+                // respawnTimer = Time.time;
+                Instantiate(enemyFollower, new Vector3(Random.Range(-70,70), Random.Range(-70,70), 0), Quaternion.identity);
+            }
+
+            ParticleSystem _explosion = Instantiate(explosion, this.transform.position, Quaternion.identity);
+            //_explosion.Play();
             Destroy(gameObject);
+            
         }
         //print(enemyHealth);
     }
+
+    // void Respawn()
+    // {
+    //     print("respond Delay: ");
+    //     print(respawnDelay);
+    //     print("time minus respawn timer");
+    //     print(Time.time-respawnTimer);
+        
+    //     if (respawnDelay > Time.time - respawnTimer)
+    //     {
+    //         Instantiate(enemyFollower, new Vector3(Random.Range(-70,70), Random.Range(-70,70), 0), Quaternion.identity);
+    //         needToRespawn = false;
+    //     }
+    // }
 
     void Fire()
     {
@@ -274,11 +329,21 @@ public class EnemyScriptGH : MonoBehaviour
     void FlashRed()
     {
         renderer.color = Color.red;
+        if (childRenderer)
+        {
+            //print("if successful");
+            childRenderer.color = Color.red;
+            //print(childRenderer.color);
+        }
         Invoke("ResetColor", flashTime);
     }
 
     void ResetColor()
     {
         renderer.color = originalColor;
+        if (childRenderer)
+        {
+            childRenderer.color = childColor;
+        }
     }
 }

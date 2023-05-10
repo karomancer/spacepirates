@@ -30,7 +30,8 @@ public class CannonBallRight : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
         cannon = GameObject.FindGameObjectWithTag("RightCannon");
-        playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
+        //playerSpeed = player.GetComponent<PlayerController>().playerSpeed;
+        playerSpeed = player.GetComponent<PlayerController2>().playerSpeed;
 
         // on instantiation, get current rotation of cannon (z axis)
         cannonRotation = cannon.transform.eulerAngles.z;
@@ -48,15 +49,17 @@ public class CannonBallRight : MonoBehaviour
         // not entirely sure why this works but it gives wanted behavior
         // there has to be an easier way to do this?
 
-        if (playerSpeed < 1.1f)
-        {
-            transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
-        }
+        // if (playerSpeed < 1.1f)
+        // {
+        //     transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * (speedScalar * playerSpeed/2));
+        // }
         
-        else
-        {
-             transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
-        }
+        // else
+        // {
+        //      transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * playerSpeed/2);
+        // }
+
+        transform.Translate((new Vector3(-Mathf.Sin(cannonRotation), Mathf.Cos(cannonRotation), 0) * speed * Time.deltaTime) * 4);
 
 
     }
@@ -68,7 +71,7 @@ public class CannonBallRight : MonoBehaviour
         {
             //print("hitting collider");
             // damage enemy
-            print("right cball hitting");
+            //print("right cball hitting");
             collider.gameObject.GetComponent<EnemyScriptGH>().TakeDamage(damage);
             Destroy(gameObject);
         }

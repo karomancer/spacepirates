@@ -160,6 +160,15 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Start"",
+                    ""type"": ""Button"",
+                    ""id"": ""9eba1a3b-7639-418f-a87b-c4a77ed996db"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -206,6 +215,17 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                     ""action"": ""Speed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4d6fcfa-4a86-4f61-8812-81119e8f285f"",
+                    ""path"": ""<HID::Teensyduino Serial/Keyboard/Mouse/Joystick>/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -225,6 +245,7 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
         m_Ship_SteeringLeft = m_Ship.FindAction("SteeringLeft", throwIfNotFound: true);
         m_Ship_SteeringRight = m_Ship.FindAction("SteeringRight", throwIfNotFound: true);
         m_Ship_Speed = m_Ship.FindAction("Speed", throwIfNotFound: true);
+        m_Ship_Start = m_Ship.FindAction("Start", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -369,6 +390,7 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
     private readonly InputAction m_Ship_SteeringLeft;
     private readonly InputAction m_Ship_SteeringRight;
     private readonly InputAction m_Ship_Speed;
+    private readonly InputAction m_Ship_Start;
     public struct ShipActions
     {
         private @Playercontrols m_Wrapper;
@@ -376,6 +398,7 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
         public InputAction @SteeringLeft => m_Wrapper.m_Ship_SteeringLeft;
         public InputAction @SteeringRight => m_Wrapper.m_Ship_SteeringRight;
         public InputAction @Speed => m_Wrapper.m_Ship_Speed;
+        public InputAction @Start => m_Wrapper.m_Ship_Start;
         public InputActionMap Get() { return m_Wrapper.m_Ship; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -394,6 +417,9 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                 @Speed.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
                 @Speed.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
                 @Speed.canceled -= m_Wrapper.m_ShipActionsCallbackInterface.OnSpeed;
+                @Start.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnStart;
+                @Start.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnStart;
+                @Start.canceled -= m_Wrapper.m_ShipActionsCallbackInterface.OnStart;
             }
             m_Wrapper.m_ShipActionsCallbackInterface = instance;
             if (instance != null)
@@ -407,6 +433,9 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
                 @Speed.started += instance.OnSpeed;
                 @Speed.performed += instance.OnSpeed;
                 @Speed.canceled += instance.OnSpeed;
+                @Start.started += instance.OnStart;
+                @Start.performed += instance.OnStart;
+                @Start.canceled += instance.OnStart;
             }
         }
     }
@@ -426,5 +455,6 @@ public partial class @Playercontrols : IInputActionCollection2, IDisposable
         void OnSteeringLeft(InputAction.CallbackContext context);
         void OnSteeringRight(InputAction.CallbackContext context);
         void OnSpeed(InputAction.CallbackContext context);
+        void OnStart(InputAction.CallbackContext context);
     }
 }

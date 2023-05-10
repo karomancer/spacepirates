@@ -27,11 +27,11 @@ public class CannonRight: MonoBehaviour
     void Awake()
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        // controls = new Playercontrols();
+        controls = new Playercontrols();
 
-        // controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
-        // controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
-        // controls.RightCannon.Shoot.performed += ctx => Fire();
+        controls.RightCannon.Steer.performed += ctx => rotation = ctx.ReadValue<float>();
+        controls.RightCannon.Steer.canceled += ctx => rotation = 0f;
+        controls.RightCannon.Shoot.performed += ctx => Fire();
     }
 
 
@@ -54,9 +54,9 @@ public class CannonRight: MonoBehaviour
     void Rotate() 
     {
         // UNCOMMENT FOR PHYS CONTROLS
-        // cannonRotation = map(rotation,-1,1,0,-180);
-        // //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
-        // transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);
+        cannonRotation = map(rotation,-1,1,0,-180);
+        //transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z - 90);
+        transform.eulerAngles = new Vector3(0,0,cannonRotation + player.transform.eulerAngles.z);
         
         
         // I = counterclockwise, P = clockwise

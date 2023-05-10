@@ -26,7 +26,8 @@ public class EnemyProjectileGH: MonoBehaviour
         //print(enemy);
 
         //enemyRotation = enemy.transform.eulerAngles.z;
-        playerDirection = player.GetComponent<PlayerController>().directionVector;
+       //playerDirection = player.GetComponent<PlayerController>().directionVector;
+        playerDirection = player.GetComponent<PlayerController2>().directionVector;
 
         // need to convert to radians to get angle in degrees 
         //enemyRotation = (enemyRotation * Mathf.PI)/180;
@@ -51,7 +52,9 @@ public class EnemyProjectileGH: MonoBehaviour
         {
             // damage player
             //print("damaging");
-            collider.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            print(damage);
+            //collider.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+            collider.gameObject.GetComponent<PlayerController2>().TakeDamage(damage);
             //Destroy(collider.gameObject);
             Destroy(gameObject);
         }

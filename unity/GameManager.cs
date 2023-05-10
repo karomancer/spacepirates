@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
     string[] pauseTextOptions = {
         "Space parrots?? No no no I wanted space FERRETS!",
     "Thanks! Now I just need some space worms...",
-    "African swallows? I specifically asked for EUROPEAN ones!!",
+    "African space chickens? I specifically asked for EUROPEAN ones!!",
     "Those boys from Space Fish and Wildlide give ya any trouble?",
     "Took ya long enough!",
     "Are these cage-free?"
@@ -97,26 +97,51 @@ public class GameManager : MonoBehaviour
 
     private int randTextIndex;
 
+    bool getNext;
+
+    public TMP_Text newScoreText;
+    private string _newScoreText;
+
+    bool textStuffDone = false;
 
 
 
 
-    private PlayerController playerController;
 
+    //private PlayerController playerController;
+    private PlayerController2 playerController;
+    Playercontrols controls;
+
+    void Awake()
+    {
+        // initialize player controls
+        controls = new Playercontrols();
+        // on button press, initialize next level if requirements have been met
+        controls.Ship.Start.performed += ctx =>  GetNextLevel();
+    }
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
-        playerController = playerScriptHolder.GetComponent<PlayerController>();
+        // get player and island. these objects are the same throughout
+
+        //playerController = playerScriptHolder.GetComponent<PlayerController>();
+        playerController = playerScriptHolder.GetComponent<PlayerController2>();
         player = GameObject.FindGameObjectWithTag("Player");
         island = GameObject.FindGameObjectWithTag("Island");
-        support = GameObject.FindGameObjectWithTag("SupportBoat");
-        //scoreText = textScriptHolder.GetComponent<TextMeshPro>();
 
+        // play main audio
         mainAudio.loop = true;
         mainAudio.Play();
 
+        // set "next level text"
         randTextIndex = Random.Range(0, pauseTextOptions.Length);
         pauseText.text = pauseTextOptions[randTextIndex];
+        
+        // generate level 1
+        GenerateNewLevel();
 
 
     }
@@ -124,33 +149,46 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // below is all done when player hits the island
         if (playerController.reachedIsland == true)
         {
-            // if (levelChangeSceneShowed)
-            // {
-                // audioSource.PlayOneShot(hitIsland, volume);
-                
-
+                // "pause" normal game
                 Time.timeScale = 0f;
                 paused = true;
+                
 
                 if (paused)
                 {
+                    // get in between level panel
                     pausePanel.SetActive(true);
-                }
+                    // calculate score and display it (but only run this once)
+                    if (!textStuffDone)
+                        UpdateScore();
+                        _newScoreText = "+ ";
+                        _newScoreText += (numDeliveries * playerHealth).ToString();
+                        _newScoreText += "points";
+                        newScoreText.text = _newScoreText;
+                        textStuffDone = true;
+                    }
+                    
                 
 
-                if (paused && Input.GetKeyDown(KeyCode.Space))
+                // once we hit the button to go to next level:
+                if ((paused && getNext) || (paused && Input.GetKeyDown(KeyCode.Space)))
                 {
+                    // unpause game
                     pausePanel.SetActive(false);
                     Time.timeScale = 1;
                     paused = false;
+                    getNext = false;
                 }
                 
 
+                // once unpaused
                 if (!paused)
                 {
-                    UpdateScore();
+                    // generate new text and new level
+                    textStuffDone = false;
                     print("generating new level");
                     randTextIndex = Random.Range(0, pauseTextOptions.Length);
                     pauseText.text = pauseTextOptions[randTextIndex];
@@ -158,18 +196,9 @@ public class GameManager : MonoBehaviour
                     GenerateNewLevel();
 
                 }
-
-            //}
-            // if boat hits island, generate new level
-            // else
-            // {
-            //     print("changing scene");
-            //     levelChangeSceneShowed = true;
-            //     SceneManager.LoadScene("LevelChange");
-            // }
             
         }
-
+        // if player dies, go to gameover screen
         if (player == null)
         {
             SceneManager.LoadScene("GameOver");
@@ -178,36 +207,61 @@ public class GameManager : MonoBehaviour
 
     void UpdateScore()
     {
-        playerHealth = playerScriptHolder.GetComponent<PlayerController>().playerHealth;
-        numDeliveries = playerScriptHolder.GetComponent<PlayerController>().numDeliveries;
-        score += (numDeliveries * playerHealth);
-        // score as a string
+        //playerHealth = playerScriptHolder.GetComponent<PlayerController>().playerHealth;
+        //numDeliveries = playerScriptHolder.GetComponent<PlayerController>().numDeliveries;
+
+        // calculate score based on health and deliveries
+        playerHealth = playerScriptHolder.GetComponent<PlayerController2>().playerHealth;
+        numDeliveries = playerScriptHolder.GetComponent<PlayerController2>().numDeliveries;
+        score += ((numDeliveries+1) * playerHealth);
         scoreString = score.ToString();
         
-        // get number of 0s needed
+        // get number of 0s needed for formatting
         numZeros = scoreLength - scoreString.Length;
 
         newScore = "";
         
         
+        // format score string
         for(int i = 0; i < numZeros; i++)
         {
             newScore += "0";
         }
  
+        // add score to end of 0s
         newScore += scoreString;
         scoreText.text = newScore;
         
     }
 
+    void GetNextLevel()
+    {
+        // if we are paused and we hit yellow button, go to next level
+        if (paused)
+        {
+            getNext = true;
+        }
+        
+    }
+
     void GenerateNewLevel() {
-        player.GetComponent<PlayerController>().Heal(100);
-        healthBar.SetHealth(player.GetComponent<PlayerController>().playerHealth);
+
+        // heal player to full heatlh and make sure health bar matches
+
+        // player.GetComponent<PlayerController>().Heal(100);
+        // healthBar.SetHealth(player.GetComponent<PlayerController>().playerHealth);
+
+        player.GetComponent<PlayerController2>().Heal(100);
+        healthBar.SetHealth(player.GetComponent<PlayerController2>().playerHealth);
+
+        // new level you have all 3 chickens to start
         delivery3.SetActive(true);
         delivery2.SetActive(true);
         delivery1.SetActive(true);
-        player.GetComponent<PlayerController>().numDeliveries = 3;
+        //player.GetComponent<PlayerController>().numDeliveries = 3;
+        player.GetComponent<PlayerController2>().numDeliveries = 3;
 
+        // increase difficulty level
         difficultyLevel += difficultyInc;
 
 
@@ -218,7 +272,7 @@ public class GameManager : MonoBehaviour
         cannonBalls = GameObject.FindGameObjectsWithTag("CannonBall");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         movingEnemies = GameObject.FindGameObjectsWithTag("EnemyMover");
-        shootingEnemies = GameObject.FindGameObjectsWithTag("Enemy_Shooter");
+        shootingEnemies = GameObject.FindGameObjectsWithTag("EnemyShooterParent");
         followingEnemies = GameObject.FindGameObjectsWithTag("EnemyFollower");
         enemyProjectiles = GameObject.FindGameObjectsWithTag("EnemyProjectile");
         obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
@@ -270,23 +324,17 @@ public class GameManager : MonoBehaviour
             Destroy(_delivery);
         }
 
-        // randomly place player and island
-        // randomly spawn an enemy and obstacle
-        
-        // player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
-        // island.transform.position = new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0);
 
-        // differenceVector = player.transform.position - island.transform.position;
-        // print("distance between");
-        // differenceFloat = differenceVector.x + differenceVector.y + differenceVector.z;
-
+        // spawn player and island, but make sure they spawn sufficiently far from each other
         for (int i = 0; i <= 20; i++)
         {
-            //player.transform.position = new Vector3(Random.Range(0,10), Random.Range(0,10), 0);
+            // player spawns at 0,0 with 0 rotation
             player.transform.position = new Vector3(0, 0, 0);
             player.transform.rotation = new Quaternion(0,0,0,0);
+            // reset compass rotation to 0
             compass.transform.rotation = new Quaternion(0,0,0,0);
             compass.transform.Rotate(new Vector3(0,0,90));
+            // place island randomly
             island.transform.position = new Vector3(Random.Range(xMin-2,xMax+2), Random.Range(yMin-2,yMax+2), 0);
             differenceVector = player.transform.position - island.transform.position;
             differenceFloat = differenceVector.x + differenceVector.y + differenceVector.z;
@@ -295,6 +343,8 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+        
+        // spawn gameobjects for level
         
         for (int i = 0; i < (int) numObstacles * difficultyLevel; i++)
         {
@@ -319,7 +369,6 @@ public class GameManager : MonoBehaviour
                 this_obstacle = Instantiate(asteroid4, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
             }
 
-            //this_obstacle = Instantiate(obstacle, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
             this_obstacle.transform.Rotate(0,0,Random.Range(0,360));
         }
 
@@ -342,6 +391,16 @@ public class GameManager : MonoBehaviour
         {
             Instantiate(healer, new Vector3(Random.Range(xMin,xMax), Random.Range(yMin,yMax), 0), Quaternion.identity);
         }
+    }
+
+    void OnEnable()
+    {
+        controls.Ship.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.Ship.Disable();
     }
 
 

@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damageAmount)
     // take damage
     {
-        audioSource.PlayOneShot(damageClip, volume);
+        audioSource.PlayOneShot(damageClip, 1);
         playerNewHealth = playerHealth - damageAmount;
 
         if (numDeliveries == 3 && playerHealth > 75 && playerNewHealth <= 75)
