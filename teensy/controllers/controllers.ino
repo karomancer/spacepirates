@@ -14,11 +14,11 @@ Encoder steeringWheel(11, 12);
 /*******************************
  ***** CANNON DECLARATIONS *****
  *******************************/
- const int LeftCannonDirection = 15;
- const int RightCannonDirection = 16;
+ const int LeftCannonDirection = 14; //15
+ const int RightCannonDirection = 15; //16
  
- const int LeftCannonFire = 17;
- const int RightCannonFire = 18;
+ const int LeftCannonFire = 9; //9
+ const int RightCannonFire = 10; //10
 
 /**************************************
  **** JOYSTICK BUTTON DECLARATIONS ****

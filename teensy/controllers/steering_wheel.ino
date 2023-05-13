@@ -10,6 +10,8 @@ void setupSteeringWheel() {
 
 void senseSteering() {
   int currentWheelLoc = steeringWheel.read();
+  Joystick.button(8, 0);
+  Joystick.button(7, 0);
 
   // Start game at neutral or if they get back to 0
   if (currentWheelLoc == 0) {
@@ -20,11 +22,11 @@ void senseSteering() {
   // If captain hasn't changed the wheel location,
   // continue to go in same direction as previously
   if (currentWheelLoc == previousWheelLoc) {
-    Serial.print("NEUTRAL: STILL ");
+    //Serial.print("NEUTRAL: STILL ");
     switch (previousDirection) {
-      case LEFT: _wheelTurnLeft(); break;
+      case LEFT: break;
       case NEUTRAL: break;
-      case RIGHT: _wheelTurnRight(); break;
+      case RIGHT: break;
     }
     return;
   }
@@ -35,14 +37,14 @@ void senseSteering() {
 
 void _wheelTurnLeft() {
   Joystick.button(7, 1);
-  Joystick.button(8, 0);
-  Serial.println("TURN LEFT");
+  //Joystick.button(8, 0);
+  //Serial.println("TURN LEFT");
   previousDirection = LEFT;
 }
 
 void _wheelTurnRight() {
   Joystick.button(8, 1);
-  Joystick.button(7, 0);
-  Serial.println("TURN RIGHT");
+  //Joystick.button(7, 0);
+  //Serial.println("TURN RIGHT");
   previousDirection = RIGHT;
 }
